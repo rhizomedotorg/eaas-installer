@@ -1,0 +1,18 @@
+clustermanager:
+  name: default
+  admin_api_access_token: "{{ eaas_cluster_api_access_token }}"
+  providers:
+  - name: default
+    type: blades
+    protocol: "{{ eaas_protocol }}"
+    node_allocator:
+      node_capacity:
+        cpu: {{ clustermgr.node_cores }}
+        memory: {{ clustermgr.node_memory }} MB
+      node_addresses:
+      - {{ eaas_hostname }}:{{ docker_port }}
+      healthcheck:
+        url_template: "{{ eaas_protocol }}{% raw %}{{address}}{% endraw %}/emucomp/health"
+    poolscaler:
+      min_poolsize: 1
+      max_poolsize: 1

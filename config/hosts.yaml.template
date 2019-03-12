@@ -1,0 +1,6 @@
+---
+all:
+  hosts:
+    eaas-gateway:
+      ansible_host: <IP-or-FQDN>
+      ansible_user: <remote-user>

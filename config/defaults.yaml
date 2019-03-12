@@ -1,0 +1,8 @@
+---
+# ui defaults
+ui_project_id: "11155235"
+ui_artifact_url: "https://gitlab.com/api/v4/projects/{{ ui_project_id }}/jobs/artifacts/{{ ui.git_branch }}/download?job=build"
+
+# eaas defaults
+eaas_project_id: "11142811"
+eaas_server_ear_url: "https://gitlab.com/api/v4/projects/{{ eaas_project_id }}/jobs/artifacts/{{ eaas.git_branch }}/raw/src/ear/target/eaas-server.ear?job=build"

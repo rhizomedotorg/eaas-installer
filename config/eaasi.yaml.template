@@ -1,0 +1,18 @@
+---
+host:
+  build_dir: "/eaas-build"
+  eaas_home: "/eaas-home"
+
+docker:
+  image: "eaas/eaas-appserver"
+  port: 80
+
+ui:
+  git_branch: "eaasi-dev"
+  http_auth:
+    user: "eaasi"
+    password: "demo"
+
+eaas:
+  git_branch: "eaasi-release-032019"
+  enable_oaipmh_provider: true

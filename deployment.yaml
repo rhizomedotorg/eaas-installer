@@ -1,0 +1,33 @@
+---
+- hosts: all
+  become_method: sudo
+  gather_facts: false
+  tasks:
+  - name: check python installation
+    import_tasks: './eaas/ansible/tasks/python.yaml'
+
+- hosts: all
+  become_method: sudo
+  vars_files:
+  - ./config/defaults.yaml
+  vars:
+    task_import_prefix: './eaas/ansible/tasks'
+    eaas_clustermgr_config_template: './templates/clustermgr-config.yaml.j2'
+    eaas_clustermgr:
+      node_cores: "{{ eaas.num_sessions | default(ansible_processor_vcpus) }}"
+      node_memory: "{{ ansible_memtotal_mb }}"
+  pre_tasks:
+  - name: stop eaas-server
+    import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"
+    vars:
+      state: stopped
+  roles:
+  - eaas-common
+  - eaas-docker
+  - eaas-server
+  - welcome-content
+  post_tasks:
+  - name: restart eaas-server
+    import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"
+    vars:
+      state: restarted
