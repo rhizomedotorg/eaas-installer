@@ -1,0 +1,3 @@
+[submodule "eaas-ansible"]
+	path = eaas/ansible
+	url = git@gitlab.com:eaasi/eaasi-ansible.git
