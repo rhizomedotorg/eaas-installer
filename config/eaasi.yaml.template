@@ -7,6 +7,14 @@ docker:
   image: "eaas/eaas-appserver"
   port: 80
 
+  # to enable SSL with custom certificate,
+  # uncomment the following lines...
+  #port: 443
+  #ssl:
+  #  enabled: true
+  #  certificate: "./artifacts/ssl/server.crt"
+  #  private_key: "./artifacts/ssl/server.key"
+
 ui:
   git_branch: "eaasi-dev"
   http_auth:
