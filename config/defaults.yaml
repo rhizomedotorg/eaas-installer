@@ -5,4 +5,4 @@ ui_artifact_url: "https://gitlab.com/api/v4/projects/{{ ui_project_id }}/jobs/ar
 
 # eaas defaults
 eaas_project_id: "11142811"
-eaas_server_ear_url: "https://gitlab.com/api/v4/projects/{{ eaas_project_id }}/jobs/artifacts/{{ eaas.git_branch }}/raw/src/ear/target/eaas-server.ear?job=build"
+eaas_server_ear_url: "https://gitlab.com/api/v4/projects/{{ eaas_project_id }}/jobs/artifacts/{{ eaas.git_branch }}/raw/eaas-server.ear?job=standalone-server-build"
