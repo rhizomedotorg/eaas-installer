@@ -20,7 +20,7 @@ __info 'preparing subdirectories...'
 mkdir -v -p artifacts artifacts/config
 
 __info 'checking out git-submodules...'
-git submodule update --init --recursive --depth 1
+git submodule update --init --recursive
 
 # check if sudo is required to run docker
 docker info > /dev/null 2>&1 || sudocmd='sudo'
