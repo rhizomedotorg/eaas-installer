@@ -24,3 +24,4 @@ ui:
 eaas:
   git_branch: "eaasi-release-2019.11"
   enable_oaipmh_provider: true
+  db_upgrade: true
