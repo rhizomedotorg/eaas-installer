@@ -1,0 +1,7 @@
+---
+all:
+  hosts:
+    eaas-gateway:
+      ansible_user: <local-user>
+      ansible_host: localhost
+      ansible_connection: local

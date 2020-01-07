@@ -22,6 +22,21 @@ mkdir -v -p artifacts artifacts/config
 __info 'checking out git-submodules...'
 git submodule update --init --recursive
 
+if [ "$1" = '--local-mode' ] ; then
+    echo "
+In local-mode, the controller machine is also the installation target machine.
+To be able to run the EaaSI-Installer locally, please first install an official
+Ansible package by following the instructions for your Linux distribution.
+
+For Ubuntu:
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu
+
+For RHEL and CentOS:
+https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-release-via-dnf-or-yum
+"
+    exit 0
+fi
+
 # build required docker-containers...
 for image in alpine ansible pwdgen ssh-keygen ; do
     cd "${repodir}/eaas/ansible/docker/${image}"
