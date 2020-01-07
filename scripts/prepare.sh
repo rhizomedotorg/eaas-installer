@@ -22,14 +22,11 @@ mkdir -v -p artifacts artifacts/config
 __info 'checking out git-submodules...'
 git submodule update --init --recursive
 
-# check if sudo is required to run docker
-docker info > /dev/null 2>&1 || sudocmd='sudo'
-
 # build required docker-containers...
 for image in alpine ansible pwdgen ssh-keygen ; do
     cd "${repodir}/eaas/ansible/docker/${image}"
     __info "building ${image} docker-container..."
-    ${sudocmd} ./build-image.sh
+    ./build-image.sh
     __newline
 done
 
@@ -40,6 +37,5 @@ key="${keydir}/admin.key"
 if [ ! -e "${key}" ] ; then
     __info 'generating ssh-key...'
     mkdir -v -p "${keydir}"
-    ${sudocmd} ./eaas/ansible/scripts/ssh-keygen.sh "${key}" 'admin@eaas'
+    ./eaas/ansible/scripts/ssh-keygen.sh "${key}" 'eaas-admin'
 fi
-
