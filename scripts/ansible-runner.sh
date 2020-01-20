@@ -13,4 +13,4 @@ exec ${sudocmd} docker run --rm --tty --interactive --name eaas-ansible \
     --net=host \
     --workdir "${workdir}" \
     eaas/ansible \
-    "$@" -vvv 
+    "$@"

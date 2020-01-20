@@ -10,7 +10,7 @@ clustermanager:
         cpu: {{ clustermgr.node_cores }}
         memory: {{ clustermgr.node_memory }} MB
       node_addresses:
-      - {{ eaas_hostname }}:{{ eaas_public_port }}
+      - {{ eaas_hostname }}:{{ docker_port }}
       healthcheck:
         url_template: "{% raw %}{{address}}{% endraw %}/emucomp/health"
     poolscaler:
