@@ -26,6 +26,7 @@
   - eaas-docker
   - eaas-server
   - welcome-content
+  - eaasi-portal
   post_tasks:
   - name: restart eaas-server
     import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"

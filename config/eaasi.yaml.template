@@ -7,6 +7,8 @@ docker:
   image: "eaas/eaas-appserver:eaasi-release-2019-11"
   port: 80
 
+  network_name: "eaasi"
+
   # to enable SSL with custom certificate,
   # uncomment the following lines...
   #port: 443
@@ -25,3 +27,37 @@ eaas:
   git_branch: "eaasi-release-2019.11"
   enable_oaipmh_provider: true
   db_upgrade: true
+
+portal:
+  docker_ports:
+    proxy: 80
+    frontend: 8080
+    webapi: 8081
+    database: 5432
+
+  ssl:
+    certificate: "./artifacts/ssl/server.crt"
+    private_key: "./artifacts/ssl/server.key"
+
+  # Authorization / authentication settings (SAML, JWT)
+  auth:
+    saml:
+      auth_endpoint: "<auth-url>"
+      entrypoint_url: "<auth-url>"
+      logout_url: "<auth-url>/logout"
+    client_jwt:
+      name: "<some-token>"
+      secret: "<some-secret>"
+      host_domain: "<some-domain>"
+
+  organization:
+    name: "EaaSI"
+
+  # Data Seed location for initial configured user.
+  # This must be configured to install the UI
+  initial_user:
+    # NOTE: email must match that registered with your identity provider!
+    email: "user@organization.com"
+    username: "user"
+    first_name: "First"
+    last_name: "Last"
