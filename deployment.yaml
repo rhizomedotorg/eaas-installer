@@ -26,8 +26,12 @@
   - eaas-docker
   - eaas-server
   - welcome-content
-  - eaasi-portal
   post_tasks:
+  - name: install eaasi-portal
+    when: portal is defined
+    include_role:
+      name: eaasi-portal
+      public: yes
   - name: restart eaas-server
     import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"
     vars:
