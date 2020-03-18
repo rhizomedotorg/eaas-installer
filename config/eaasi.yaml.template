@@ -4,7 +4,7 @@ host:
   eaas_home: "/eaas-home"
 
 docker:
-  image: "eaas/eaas-appserver:eaasi-release-2019-07"
+  image: "eaas/eaas-appserver:eaasi-release-2019-11"
   port: 80
 
   # to enable SSL with custom certificate,
@@ -16,11 +16,12 @@ docker:
   #  private_key: "./artifacts/ssl/server.key"
 
 ui:
-  git_branch: "eaasi-release-2019.07"
+  git_branch: "eaasi-release-2019.11"
   http_auth:
     user: "eaasi"
     password: "demo"
 
 eaas:
-  git_branch: "eaasi-release-2019.07"
+  git_branch: "eaasi-release-2019.11"
   enable_oaipmh_provider: true
+  db_upgrade: true

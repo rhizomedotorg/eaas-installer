@@ -21,12 +21,27 @@ $ ssh-copy-id -i ./artifacts/ssh/admin.key user@hostname
 ```
 
 
+### Local-Mode
+
+If you want to use the controller-machine as an installation target for some
+reason, then the controller-machine should be prepared in *local-mode* instead:
+```
+$ ./scripts/prepare.sh --local-mode
+```
+
+
 ## Configure EaaSI-Installer
 
 The target machines to install EaaSI on must be defined in `./artifacts/config/hosts.yaml`.
 You can use provided template file as an example:
 ```
 $ cp ./config/hosts.yaml.template ./artifacts/config/hosts.yaml
+```
+
+If *local-mode* option was choosen in the previous step, the following template
+should be used instead:
+```
+$ cp ./config/localhost.yaml.template ./artifacts/config/hosts.yaml
 ```
 
 EaaSI deployment configuration must be defined in `./artifacts/config/eaasi.yaml`.
