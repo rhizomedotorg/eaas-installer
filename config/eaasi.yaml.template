@@ -31,13 +31,11 @@ eaas:
 portal:
   docker_ports:
     proxy: 80
+    # if SSL is enabled proxy port must be specified
+    # proxy_ssl: 443
     frontend: 8080
     webapi: 8081
     database: 5432
-
-  ssl:
-    certificate: "./artifacts/ssl/server.crt"
-    private_key: "./artifacts/ssl/server.key"
 
   # Authorization / authentication settings (SAML, JWT)
   auth:
@@ -45,6 +43,9 @@ portal:
       auth_endpoint: "<auth-url>"
       entrypoint_url: "<auth-url>"
       logout_url: "<auth-url>/logout"
+      client_id: "<SAML-client-id>"
+      sp_cert: "./artifacts/auth/cert.pem"
+      sp_private_key: "./artifacts/auth/key.pem"
     client_jwt:
       name: "<some-token>"
       secret: "<some-secret>"
