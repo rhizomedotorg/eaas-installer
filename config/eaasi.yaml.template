@@ -1,21 +1,20 @@
 ---
 host:
-  build_dir: "/eaas-build"
-  eaas_home: "/eaas-home"
+  build_dir: "/eaasi/build"
+  eaas_home: "/eaasi/"
 
 docker:
-  image: "eaas/eaas-appserver:eaasi-release-2019-11"
+  image: "eaas/eaas-appserver:latest"
   port: 80
 
   network_name: "eaasi"
 
   # to enable SSL with custom certificate,
   # uncomment the following lines...
-  #port: 443
   #ssl:
   #  enabled: true
-  #  certificate: "./artifacts/ssl/server.crt"
-  #  private_key: "./artifacts/ssl/server.key"
+  #  certificate: "./artifacts/ssl/certificate.crt"
+  #  private_key: "./artifacts/ssl/private.key"
 
 ui:
   git_branch: "eaasi-release-2019.11"
@@ -40,6 +39,7 @@ portal:
   # Authorization / authentication settings (SAML, JWT)
   auth:
     saml:
+      enabled: false
       auth_endpoint: "<auth-url>"
       entrypoint_url: "<auth-url>"
       logout_url: "<auth-url>/logout"
@@ -50,7 +50,14 @@ portal:
       name: "<some-token>"
       secret: "<some-secret>"
       host_domain: "<some-domain>"
-
+    # mailer settings, required for new user account password delivery
+    mailer:
+      port: 587
+      host: "<some-smtp-host>"
+      user: "<username>"
+      password: "<password>"
+      sender: "<noreply@example.com>"
+      
   organization:
     name: "EaaSI"
 
