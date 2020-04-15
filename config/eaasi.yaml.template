@@ -29,13 +29,6 @@ eaas:
 
 portal:
   git_branch: "eaasi-release-2020.03"
-  docker_ports:
-    proxy: 80
-    # if SSL is enabled proxy port must be specified
-    # proxy_ssl: 443
-    frontend: 8080
-    webapi: 8081
-    database: 5432
 
   # Authorization / authentication settings (SAML, JWT)
   auth:
