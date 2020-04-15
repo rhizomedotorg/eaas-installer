@@ -40,10 +40,6 @@ portal:
       client_id: "<SAML-client-id>"
       sp_cert: "./artifacts/auth/cert.pem"
       sp_private_key: "./artifacts/auth/key.pem"
-    client_jwt:
-      name: "<some-token>"
-      secret: "<some-secret>"
-      host_domain: "<some-domain>"
     # mailer settings, required to use the default auth method
     mailer:
       port: 587
