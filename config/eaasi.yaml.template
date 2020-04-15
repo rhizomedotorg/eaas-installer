@@ -27,6 +27,7 @@ eaas:
 
 portal:
   git_branch: "eaasi-release-2020.03"
+  db_update: false
 
   # Authorization / authentication settings (SAML, JWT)
   auth:
