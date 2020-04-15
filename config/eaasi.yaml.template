@@ -5,8 +5,6 @@ host:
 
 docker:
   image: "eaas/eaas-appserver:latest"
-  port: 80
-
   network_name: "eaasi"
 
   # to enable SSL with custom certificate,
@@ -32,14 +30,15 @@ portal:
 
   # Authorization / authentication settings (SAML, JWT)
   auth:
-    saml:
-      enabled: false
-      auth_endpoint: "<auth-url>"
-      entrypoint_url: "<auth-url>"
-      logout_url: "<auth-url>/logout"
-      client_id: "<SAML-client-id>"
-      sp_cert: "./artifacts/auth/cert.pem"
-      sp_private_key: "./artifacts/auth/key.pem"
+    #saml:
+    #  enabled: false
+    #  auth_endpoint: "<auth-url>"
+    #  entrypoint_url: "<auth-url>"
+    #  logout_url: "<auth-url>/logout"
+    #  client_id: "<SAML-client-id>"
+    #  sp_cert: "./artifacts/auth/cert.pem"
+    #  sp_private_key: "./artifacts/auth/key.pem"
+
     # mailer settings, required to use the default auth method
     mailer:
       port: 587
@@ -47,7 +46,7 @@ portal:
       user: "<username>"
       password: "<password>"
       sender: "<noreply@example.com>"
-      
+
   organization:
     name: "EaaSI"
 
