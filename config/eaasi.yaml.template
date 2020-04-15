@@ -28,6 +28,7 @@ eaas:
   db_upgrade: true
 
 portal:
+  git_branch: "eaasi-release-2020.03"
   docker_ports:
     proxy: 80
     # if SSL is enabled proxy port must be specified
@@ -50,7 +51,7 @@ portal:
       name: "<some-token>"
       secret: "<some-secret>"
       host_domain: "<some-domain>"
-    # mailer settings, required for new user account password delivery
+    # mailer settings, required to use the default auth method
     mailer:
       port: 587
       host: "<some-smtp-host>"
