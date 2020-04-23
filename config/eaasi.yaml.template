@@ -31,15 +31,7 @@ portal:
 
   # Authorization / authentication settings (SAML, JWT)
   auth:
-    #saml:
-    #  enabled: false
-    #  auth_endpoint: "<auth-url>"
-    #  entrypoint_url: "<auth-url>"
-    #  logout_url: "<auth-url>/logout"
-    #  client_id: "<SAML-client-id>"
-    #  sp_cert: "./artifacts/auth/cert.pem"
-    #  sp_private_key: "./artifacts/auth/key.pem"
-
+  
     # mailer settings, required to use the default auth method
     mailer:
       port: 587
