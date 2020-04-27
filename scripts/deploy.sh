@@ -2,6 +2,11 @@
 
 repodir="$(cd "$(dirname -- "$0")/.." && pwd -P)"
 
+# should ansible be run in local mode?
+if grep 'ansible_host: localhost' './artifacts/config/hosts.yaml' > /dev/null 2>&1 ; then
+    set - '--ask-become-pass' "$@"
+fi
+
 set - '--verbose' \
       '--inventory' './artifacts/config/hosts.yaml' \
       '--extra-vars' '@./artifacts/config/eaasi.yaml' \

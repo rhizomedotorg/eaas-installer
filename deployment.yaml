@@ -8,6 +8,7 @@
 
 - hosts: all
   become_method: sudo
+  gather_facts: true
   vars_files:
   - ./config/defaults.yaml
   vars:
