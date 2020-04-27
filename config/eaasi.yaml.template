@@ -3,6 +3,10 @@ host:
   build_dir: "/eaasi/build"
   eaas_home: "/eaasi/"
 
+public_proxy:
+  fqdn: <public_proxy>
+  protocol: <protocol>
+
 docker:
   image: "eaas/eaas-appserver:latest"
   network_name: "eaasi"
