@@ -23,7 +23,6 @@ ui:
 eaas:
   git_branch: "eaasi-release-2019.11"
   enable_oaipmh_provider: true
-  db_upgrade: true
 
 portal:
   git_branch: "eaasi-release-2020.03"
@@ -31,7 +30,7 @@ portal:
 
   # Authorization / authentication settings (SAML, JWT)
   auth:
-  
+
     # mailer settings, required to use the default auth method
     mailer:
       port: 587
