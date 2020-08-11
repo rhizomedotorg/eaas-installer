@@ -18,17 +18,31 @@
       node_cores: "{{ eaas.num_sessions | default(ansible_processor_vcpus) }}"
       node_memory: "{{ ansible_memtotal_mb }}"
   pre_tasks:
+  - name: check supported distribution
+    when: "ansible_distribution not in ['Ubuntu', 'CentOS', 'RedHat']"
+    set_fact: 
+      unsupported_os: "true"
+
+  - name: full distribution support
+    when: "unsupported_os is undefined"
+    debug:
+      msg: "{{ ansible_distribution }} distribution is currently not supported!"
+  
   - name: stop eaas-server
+    when: "unsupported_os is undefined"
     import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"
     vars:
       state: stopped
+
   roles:
   - eaas-common
   - eaas-docker
   - eaas-server
   - welcome-content
+  
   post_tasks:
   - name: restart eaas-server
+    when: "unsupported_os is undefined"
     import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"
     vars:
       state: restarted
