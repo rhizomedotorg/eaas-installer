@@ -10,4 +10,4 @@ test -z "${branch}" && branch='master'
 
 git fetch "${remote}" "${branch}"
 git checkout "${branch}"
-git submodule update --recursive
+git submodule update --init --recursive
