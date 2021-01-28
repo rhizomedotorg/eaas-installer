@@ -1,0 +1,24 @@
+---
+host:
+  build_dir: "/builds/eaas-build"
+  eaas_home: "/builds/eaas-home"
+
+docker:
+  image: "eaas/eaas-appserver"
+  port: 8080
+
+  # to enable SSL with custom certificate,
+  # uncomment the following lines...
+  #port: 443
+  #ssl:
+  #  enabled: true
+  #  certificate: "./artifacts/ssl/server.crt"
+  #  private_key: "./artifacts/ssl/server.key"
+
+ui:
+  git_branch: "master"
+
+eaas:
+  git_branch: "master"
+  enable_oaipmh_provider: true
+
