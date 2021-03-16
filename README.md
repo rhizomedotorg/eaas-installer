@@ -1,8 +1,6 @@
-# EaaS laptop install
+# EaaS Local-Mode Installation
 
-This guide is based on the original [Setup and Deployment guide](https://openslx.gitlab.io/eaasi-docs/install/setup.html) and the [EaaSI installer README](https://gitlab.com/eaasi/eaasi-installer/-/blob/master/README.md).
-
-Goal of the process described here is to install EaaS on a local computer using an automated installer from the EaaSI project, in most cases to prepare environments to be published on Rhizome's public infrastructure.
+This installer is able to deploy EaaS on a local computer (localhost) for testing / experiments.  This documentation is based on the EaaS-CI test runner (https://gitlab.com/emulation-as-a-service/experiments/eaas-ci-test).  
 
 - This will only work on Linux, the description here is for Ubuntu version 18.04 or above.
 - EaaS will be installed as a systemd service and requires Docker to be installed as a systemd service as well.
@@ -10,42 +8,35 @@ Goal of the process described here is to install EaaS on a local computer using 
 
 ## Preconditions
 
-1. **Optional:** To access certain branches you need a GitLab account and generate a personal access token. You can safely skip this point if unsure.
-   1. Go the [Personal Access Token](https://gitlab.com/profile/personal_access_tokens) settings page.
-   2. Pick a random name and check all checkboxes: api, read_repository
-   3. Create the token and note the displated string (it is not possible to display it again.
-   4. Ask the EaaS team to integrate your GitLab account user name in their team. `klaus.rechert@rz.uni-freiburg.de`. Let them know your GitLab user name.
-2. All repositories need to be set up so that when running `sudo apt update` no errors are generated. For instance, repositories with expired certificates, invalid or missing GPG keys, or one that are just offline at the moment, need to be removed from the active repository list. Identify possible offenders by running `sudo apt update` and deactive them with Ubuntu's **Software & Updates** app.
-3. [Docker](https://docs.docker.com/install/linux/docker-ce/ubuntu/) needs to be installed and working. 
-4. [docker-compose](https://docs.docker.com/compose/) It is recommended to install the latest version of `docker-compose`.
-5.
-   a. **Method 1:** Install static binary (recommended): 
-       
-      ```bash
-      sudo curl -L "https://github.com/docker/compose/releases/download/1.25.5/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-      ```
-       
-    b. **Method 2**  via python instead of using the version from Docker's repo:
+The host system requires the following tools installed:
+
+- A current [Docker](https://docs.docker.com/install/) version
+- Python (v3 preferred) and Python PIP  
+
+On a current Ubuntu just run
+```
+apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
+  sudo \
+  git docker.io unzip \
+  python3-pip python-is-python3 \
+  curl
+```
+
+Finally, install python dependencies via Python PIP:
    ```bash
-   sudo pip3 install docker-compose
+   sudo pip3 install docker-compose ansible
    ```
    
-4. Ansible needs to be installed. [Follow the instructions](https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#latest-releases-via-apt-ubuntu) or hope for the best when using these commands:
-   ```bash
-   sudo pip3 install ansible
-   ```
-
-
 ## Base Installation and Setup
 
 The installation process is based on an Ansible *playbook*, a set of scripts that make changes to the computer's configuration based on parameters in a bunch of yaml files. Some of these parameters need to be tweaked depending on local requirements.
 
 The installation process is supposed to run only once. To update the setup with new versions of EaaS, a separate updater is used.
 
-1. Clone the repository `eaasi-installer` and change into the repo's diretory:
+1. Clone this repository e.g.
    ```bash
-   git clone git@gitlab.com:eaasi/eaasi-installer.git
-   cd eaasi-installer
+   git clone https://gitlab.com/emulation-as-a-service/eaas-local-installer.git
+   cd eaas-local-installer
    ```
 
 2. Run the preparation script and specify that you want to install locally:
@@ -53,70 +44,52 @@ The installation process is supposed to run only once. To update the setup with 
    ./scripts/prepare.sh --local-mode
    ```
 
-3. Copy template setup files to the place where the installer expects them. For the local computer use-case, it should be these ones:
+3. Configure and customize your installation
    ```bash
    cp ./config/localhost.yaml.template ./artifacts/config/hosts.yaml
    cp ./config/eaasi.yaml.template ./artifacts/config/eaasi.yaml
    ```
 
-4. Make changes to `artifacts/hosts.yaml`
+4. Make changes to `artifacts/config/hosts.yaml`
      ```yaml
      ---
      all:
        hosts:
          eaas-gateway:
-           ansible_user: despens  ## change to your local username.
+           ansible_user: eaas-user  ## change to your local username.
            ansible_host: localhost
            ansible_connection: local
      ```
 
-**Note:** `ansible_user` requires sudo capabilities. 
+**Note:** `ansible_user` needs to exist and requires sudo capabilities. 
 
-5. Make changes to `artifacts/eaasi.yaml`:
+5. Make changes to `artifacts/config/eaasi.yaml`:
     ```yaml
     ---
     host:
       build_dir: "/eaas-build" ## Set up target directories
       eaas_home: "/eaas-home"  ## on a drive with lots of space!
+      eaas_service_name: "eaas-local" ## on systemd capable systems (e.g. ubuntu) a service unit will be created
 
     docker:
       image: "eaas/eaas-appserver"
       port: 8080	# Don't change the port.
 
-      ## For a locahost connection, SSL is not required,
-      ## Keep commented out.
-      
-      # to enable SSL with custom certificate,
-      # uncomment the following lines...
-      #port: 443
-      #ssl:
-      #  enabled: true
-      #  certificate: "./artifacts/ssl/server.crt"
-      #  private_key: "./artifacts/ssl/server.key"
-
     ui:
       git_branch: "master"
-      
-      ## Comment out http_auth unless you want to type in
-      ## an extra password into your browser.
-      
-      # http_auth:
-      #   user: "eaasi"
-      #   password: "demo"
-
+      enable_network_sessions: true
+      enable_containers: true
+      enable_webrtc: true
+      standalone: true
+    
     eaas:
       git_branch: "master"
       enable_oaipmh_provider: true
       db_upgrade: true
 
-    ## eaas_private_token: "abc123" ## Your GitLab personal access token string
-    eaas_project_id: "10009002" ## project id public 'emulation-as-a-service'  
-    ## ui_private_token: "abc123" ## Your GitLab personal access token string
-    ui_project_id: "10009004" ## project id public 'emulation-as-a-service
     ```
 6. Run `./scripts/deploy.sh` — after a few minutes, you should have your very own EaaS node running on your computer.
 
-## Maintenance
 
 ### Updating
 
@@ -144,19 +117,19 @@ If you install EaaS on your laptop, you probably do not want it to start up each
 Disable the EaaS service so it won't automatically start:
 
 ```sh
-sudo systemctl disable eaas
+sudo systemctl disable eaas-local
 ```
 
 When the time has come, manually start it:
 
 ```sh
-sudo systemctl start eaas
+sudo systemctl start eaas-local
 ```
 
 To gracefully stop the server, run:
 
 ```sh
-sudo systemctl stop eaas
+sudo systemctl stop eaas-local
 ```
 
 ## First Steps
