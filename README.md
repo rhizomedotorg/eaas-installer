@@ -2,8 +2,8 @@
 
 This installer is able to deploy EaaS on a local computer (localhost) for testing / experiments.  This documentation is based on the EaaS-CI test runner (https://gitlab.com/emulation-as-a-service/experiments/eaas-ci-test).  
 
-- This will only work on Linux, the description here is for Ubuntu version 18.04 or above.
-- EaaS will be installed as a systemd service and requires Docker to be installed as a systemd service as well.
+- This will work on Linux and Mac OSX. Other OS might work, but untested.
+- By default EaaS will be installed as a systemd service and requires Docker to be installed as a systemd service as well.
 - The EaaS interface will be accessible at `http://localhost:8080`.
 
 ## Preconditions
@@ -90,6 +90,7 @@ The installation process is supposed to run only once. To update the setup with 
     ```
 6. Run `./scripts/deploy.sh` — after a few minutes, you should have your very own EaaS node running on your computer.
 
+**Note:** If you have an older version installed make sure to run `sudo docker-compose pull` in `eaas-home` to pull the latest EaaS containers. 
 
 ### Updating
 
@@ -110,7 +111,9 @@ To update all components, simply run:
 
 See [orginal notes](https://openslx.gitlab.io/eaasi-docs/install/setup.html#updating-eaasi).
 
-### Managing the service
+### Managing the service (systemd / Linux only)
+
+(MacOS users see below)
 
 If you install EaaS on your laptop, you probably do not want it to start up each time you boot your system, or have it constantly running in the background, especially if you installed it on an external drive.
 
@@ -131,6 +134,13 @@ To gracefully stop the server, run:
 ```sh
 sudo systemctl stop eaas-local
 ```
+
+### Manual managing the EaaS server
+
+Inside the `eaas-home` run `sudo docker-compose up` to start the service. 
+
+**Note:** If you have a older version installed make sure to run `sudo docker-compose pull` to pull the latest EaaS containers.  
+
 
 ## First Steps
 
