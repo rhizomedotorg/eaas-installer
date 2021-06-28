@@ -24,7 +24,7 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 Finally, install python dependencies via Python PIP:
    ```bash
-   sudo pip3 install docker-compose ansible
+   sudo pip3 install docker-compose ansible jmespath
    ```
    
 ## Base Installation and Setup
@@ -68,7 +68,7 @@ The installation process is supposed to run only once. To update the setup with 
     ---
     host:
       build_dir: "/eaas-build" ## Set up target directories
-      eaas_home: "/eaas-home"  ## on a drive with lots of space!
+      eaas_home: "/eaas-home-local"  ## on a drive with lots of space!
       eaas_service_name: "eaas-local" ## on systemd capable systems (e.g. ubuntu) a service unit will be created
 
     docker:
@@ -76,16 +76,22 @@ The installation process is supposed to run only once. To update the setup with 
       port: 8080	# Don't change the port.
 
     ui:
-      git_branch: "master"
       enable_network_sessions: true
       enable_containers: true
       enable_webrtc: true
       standalone: true
     
     eaas:
-      git_branch: "master"
       enable_oaipmh_provider: true
       db_upgrade: true
+
+    operator:
+      release:
+        channel: "eaas"
+        version: "210625.0"
+      channels:
+      - location: "https://gitlab.com/api/v4/projects/emulation-as-a-service%2feaas-releases/jobs/artifacts/master/raw/public/channels/eaas.json?job=pages"
+
 
     ```
 6. Run `./scripts/deploy.sh` — after a few minutes, you should have your very own EaaS node running on your computer.

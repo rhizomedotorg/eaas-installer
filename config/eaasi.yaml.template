@@ -1,29 +1,25 @@
 ---
 host:
   build_dir: "/eaas-build"
-  eaas_home: "/eaas-home"
+  eaas_home: "/eaas-home-local"
   eaas_service_name: "eaas-local"
 
 docker:
   image: "eaas/eaas-appserver"
   port: 8080
 
-  # to enable SSL with custom certificate,
-  # uncomment the following lines...
-  #port: 443
-  #ssl:
-  #  enabled: true
-  #  certificate: "./artifacts/ssl/server.crt"
-  #  private_key: "./artifacts/ssl/server.key"
+operator:
+  release:
+    channel: "eaas"
+    version: "210625.0"
+  channels:
+  - location: "https://gitlab.com/api/v4/projects/emulation-as-a-service%2feaas-releases/jobs/artifacts/master/raw/public/channels/eaas.json?job=pages"
 
 ui:
-  git_branch: "master"
   enable_network_sessions: true
   enable_containers: true
-  landing_page: true
   
 eaas:
-  git_branch: "master"
   enable_oaipmh_provider: true
   db_upgrade: true
   enable_webrtc: true
