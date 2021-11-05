@@ -1,6 +1,6 @@
 [submodule "eaas-ansible"]
 	path = eaas/ansible
 	url = https://gitlab.com/eaasi/eaasi-ansible.git
-[submodule "portal-ansible"]
-	path = portal/ansible
-	url = https://gitlab.com/eaasi/eaasi-portal-ansible.git
+[submodule "eaasi-ui-ansible"]
+	path = eaasi-ui/ansible
+	url = https://gitlab.com/eaasi/eaasi-ui-ansible.git
