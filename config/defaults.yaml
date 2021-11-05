@@ -1,7 +1,7 @@
 ---
 # ui defaults
 ui_project_id: "11155235"
-ui_artifact_url: "https://gitlab.com/api/v4/projects/{{ ui_project_id }}/jobs/artifacts/{{ ui.git_branch }}/download?job=build"
+ui_artifact_url: "https://gitlab.com/api/v4/projects/{{ ui_project_id }}/jobs/artifacts/{{ demo_ui.version }}/download?job=build"
 
 # eaas defaults
 eaas_project_id: "11142811"
