@@ -1,10 +1,9 @@
 ---
 host:
-  build_dir: "/eaasi/build"
-  eaas_home: "/eaasi/"
+  eaas_home: "/eaasi"
 
 docker:
-  image: "eaas/eaas-appserver:eaasi-release-2019-11"
+  image: "eaas/eaas-appserver:v2021.10-eaasi"
   network_name: "eaasi"
 
   # to enable SSL with custom certificate,
@@ -14,38 +13,38 @@ docker:
   #  certificate: "./artifacts/ssl/certificate.crt"
   #  private_key: "./artifacts/ssl/private.key"
 
-ui:
-  git_branch: "eaasi-release-2019.11"
-  http_auth:
-    user: "eaasi"
-    password: "demo"
+keycloak:
+  version: "15.0.2"
+  enabled: true
+  admin_user: "superadmin"
+  admin_password: "<SUPERADMIN-PASSWORD>"
+
+minio:
+  version: "RELEASE.2021-11-03T03-36-36Z"
+  enabled: true
 
 eaas:
-  git_branch: "eaasi-release-2019.11"
-  enable_oaipmh_provider: true
+  version: "v2021.10-eaasi"
+  migrations:
+  - name: import-legacy-image-index
+  - name: import-legacy-emulator-index
+  - name: import-legacy-image-archive-v1
+  - name: import-local-emil-environments
+  - name: import-legacy-emil-database-v1
+  - name: create-absent-emil-environments
 
-portal:
-  git_branch: "eaasi-release-2020.03"
+  # currently required options,
+  # just leave them as-is
+  enable_backend_auth: true
+  enable_user_auth: true
+  single_user_mode: false
+  user_archive_enabled: false
+  auth_audience: ""
 
-  # Authorization / authentication settings (SAML, JWT)
-  auth:
+demo_ui:
+  version: "v2021.10-eaasi"
+  enable_admin_ui: true
 
-    # mailer settings, required to use the default auth method
-    mailer:
-      port: 587
-      host: "<some-smtp-host>"
-      user: "<username>"
-      password: "<password>"
-      sender: "<noreply@example.com>"
-
-  organization:
-    name: "EaaSI"
-
-  # Data Seed location for initial configured user.
-  # This must be configured to install the UI
-  initial_user:
-    # NOTE: email must match that registered with your identity provider!
-    email: "user@organization.com"
-    username: "user"
-    first_name: "First"
-    last_name: "Last"
+eaasi_ui:
+  version: "v2021.10"
+  edition: "standalone"
