@@ -41,10 +41,10 @@
   - welcome-content
   
   post_tasks:
-  - name: install eaasi-portal
-    when: portal is defined
+  - name: install eaasi-ui
+    when: eaasi_ui is defined
     include_role:
-      name: eaasi-portal
+      name: eaasi-ui
       public: yes
   - name: restart eaas-server
     when: "unsupported_os is undefined"
