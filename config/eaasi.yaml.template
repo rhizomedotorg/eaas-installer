@@ -1,19 +1,18 @@
 ---
 host:
-  build_dir: "/eaas-build"
-  eaas_home: "/eaas-home"
+  build_dir: "/eaasi/build"
+  eaas_home: "/eaasi/"
 
 docker:
   image: "eaas/eaas-appserver:eaasi-release-2019-11"
-  port: 80
+  network_name: "eaasi"
 
   # to enable SSL with custom certificate,
   # uncomment the following lines...
-  #port: 443
   #ssl:
   #  enabled: true
-  #  certificate: "./artifacts/ssl/server.crt"
-  #  private_key: "./artifacts/ssl/server.key"
+  #  certificate: "./artifacts/ssl/certificate.crt"
+  #  private_key: "./artifacts/ssl/private.key"
 
 ui:
   git_branch: "eaasi-release-2019.11"
@@ -24,4 +23,29 @@ ui:
 eaas:
   git_branch: "eaasi-release-2019.11"
   enable_oaipmh_provider: true
-  db_upgrade: true
+
+portal:
+  git_branch: "eaasi-release-2020.03"
+
+  # Authorization / authentication settings (SAML, JWT)
+  auth:
+
+    # mailer settings, required to use the default auth method
+    mailer:
+      port: 587
+      host: "<some-smtp-host>"
+      user: "<username>"
+      password: "<password>"
+      sender: "<noreply@example.com>"
+
+  organization:
+    name: "EaaSI"
+
+  # Data Seed location for initial configured user.
+  # This must be configured to install the UI
+  initial_user:
+    # NOTE: email must match that registered with your identity provider!
+    email: "user@organization.com"
+    username: "user"
+    first_name: "First"
+    last_name: "Last"
