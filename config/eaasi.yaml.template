@@ -18,6 +18,9 @@ keycloak:
   enabled: true
   admin_user: "superadmin"
   admin_password: "<SUPERADMIN-PASSWORD>"
+  theme:
+    version: "v2021.10"
+    name: "eaasi-v1"
 
 minio:
   version: "RELEASE.2021-11-03T03-36-36Z"

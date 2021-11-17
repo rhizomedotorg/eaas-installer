@@ -6,3 +6,7 @@ ui_artifact_url: "https://gitlab.com/api/v4/projects/{{ ui_project_id }}/jobs/ar
 # eaas defaults
 eaas_project_id: "11142811"
 eaas_server_ear_url: "https://gitlab.com/api/v4/projects/{{ eaas_project_id }}/jobs/artifacts/{{ eaas.version }}/raw/eaas-server.ear?job=standalone-server-build"
+
+# keycloak defaults
+keycloak_project_id: "23618750"
+keycloak_theme_url: "https://gitlab.com/api/v4/projects/{{ keycloak_project_id }}/jobs/artifacts/{{ keycloak.theme.version }}/raw/eaasi-keycloak-theme.jar?job=build"
