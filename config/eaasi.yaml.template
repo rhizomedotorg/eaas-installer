@@ -51,3 +51,11 @@ demo_ui:
 eaasi_ui:
   version: "v2021.10"
   edition: "standalone"
+
+  # to update older installations,
+  # uncomment the following lines...
+  #migrations:
+  #- name: "import-legacy-users"
+  #  args:
+  #    tenant_id: "eaasi"
+  #    orgname: "EaaSI"
