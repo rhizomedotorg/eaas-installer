@@ -3,7 +3,7 @@ host:
   eaas_home: "/eaasi"
 
 docker:
-  image: "eaas/eaas-appserver:v2021.10-eaasi"
+  image: "registry.gitlab.com/emulation-as-a-service/eaas/eaas-appserver:v2021.10-eaasi"
   network_name: "eaasi"
 
   # to enable SSL with custom certificate,
@@ -59,3 +59,8 @@ eaasi_ui:
   #  args:
   #    tenant_id: "eaasi"
   #    orgname: "EaaSI"
+
+# to enable workarounds for certain issues,
+# try to uncomment the following lines...
+#workarounds:
+#  docker_hub_ratelimits: true
