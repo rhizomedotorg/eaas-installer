@@ -34,7 +34,7 @@ eaas:
     - type: "S3"
       name: "zero conf"
       default_archive: true
-      endpoint: "{{ eaas_base_url }}"
+      endpoint: "https://{{ eaas_hostname }}"
       access_key: "{{ minio_key }}"
       secret_key: "{{ minio_secret }}"
       bucket: "object-archive"
