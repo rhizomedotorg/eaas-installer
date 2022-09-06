@@ -29,5 +29,15 @@ eaas:
   enable_webrtc: true
   standalone: true
 
+  objectarchive:
+    backends:
+    - type: "S3"
+      name: "zero conf"
+      default_archive: true
+      endpoint: "{{ eaas_base_url }}"
+      access_key: "{{ minio_key }}"
+      secret_key: "{{ minio_secret }}"
+      bucket: "object-archive"
+
 eaas_project_id: "10009002" ## project id public 'emulation-as-a-service'
 ui_project_id: "10009004" ## project id public 'emulation-as-a-service
