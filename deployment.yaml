@@ -41,8 +41,23 @@
   - welcome-content
   
   post_tasks:
+  - name: install eaasi-ui
+    when: eaasi_ui is defined
+    include_role:
+      name: eaasi-ui
+      public: yes
   - name: restart eaas-server
     when: "unsupported_os is undefined"
     import_tasks: "{{ task_import_prefix }}/eaas-service.yaml"
     vars:
       state: restarted
+  - name: wait for eaas-server to start up
+    register: response
+    until: response.status != 404
+    retries: 180  # 180*5s == 15 min
+    delay: 5
+    uri:
+      method: "POST"
+      url: "{{ eaas_base_url }}/emil/environment-repository/actions/prepare"
+      return_content: yes
+      timeout: 600  # 10*60s
