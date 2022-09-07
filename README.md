@@ -22,6 +22,8 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
   curl
 ```
 
+(On Ubuntu 18.04, due to an [outdated version of pip](https://pythonspeed.com/articles/upgrade-pip/), you have to install `apt-get install -y python3-cryptography` or Ansible [will not install](https://github.com/ansible/ansible/issues/73859). Also, the `python-is-python3` package is not available, instead run `update-alternatives --install /usr/bin/python python /usr/bin/python3 100`.)
+
 Finally, install python dependencies via Python PIP:
    ```bash
    sudo pip3 install docker-compose ansible
