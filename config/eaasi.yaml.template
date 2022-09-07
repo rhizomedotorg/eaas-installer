@@ -12,8 +12,8 @@ docker:
   # uncomment the following lines...
   #ssl:
   #  enabled: true
-  #  certificate: "./artifacts/ssl/server.crt"
-  #  private_key: "./artifacts/ssl/server.key"
+  #  certificate: "./artifacts/ssl/certificate.crt"
+  #  private_key: "./artifacts/ssl/private.key"
 
 minio:
   enabled: true
