@@ -50,5 +50,9 @@ demo_ui:
   enable_containers: true
   landing_page: true
 
-eaas_project_id: "10009002" ## project id public 'emulation-as-a-service'
-ui_project_id: "10009004" ## project id public 'emulation-as-a-service
+resolver:
+  cache:
+    enabled: true
+
+eaas_project_id: "emulation-as-a-service%2feaas-server"
+ui_project_id: "emulation-as-a-service%2fdemo-ui"
