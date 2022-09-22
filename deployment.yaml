@@ -53,7 +53,7 @@
       state: restarted
   - name: wait for eaas-server to start up
     register: response
-    until: response.status != 404
+    until: response.status == 200
     retries: 180  # 180*5s == 15 min
     delay: 5
     uri:
