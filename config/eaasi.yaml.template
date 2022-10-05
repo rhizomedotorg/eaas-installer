@@ -54,5 +54,18 @@ resolver:
   cache:
     enabled: true
 
+  # to update older installations,
+  # uncomment the following lines...
+  #migrations:
+  #- name: "import-legacy-users"
+  #  args:
+  #    tenant_id: "eaasi"
+  #    orgname: "EaaSI"
+
+# to enable workarounds for certain issues,
+# try to uncomment the following lines...
+#workarounds:
+#  docker_hub_ratelimits: true
+
 eaas_project_id: "emulation-as-a-service%2feaas-server"
 ui_project_id: "emulation-as-a-service%2fdemo-ui"
