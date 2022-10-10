@@ -33,16 +33,6 @@ eaas:
   # user_archive_enabled: false
   # auth_audience: ""
 
-  objectarchive:
-    backends:
-    - type: "S3"
-      name: "zero conf"
-      default_archive: true
-      endpoint: "https://{{ eaas_hostname }}"
-      access_key: "{{ minio_key }}"
-      secret_key: "{{ minio_secret }}"
-      bucket: "object-archive"
-
 demo_ui:
   version: "master"
   enable_admin_ui: true
