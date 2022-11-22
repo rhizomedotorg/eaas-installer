@@ -9,6 +9,9 @@ cd -- "$(dirname -- "$(realpath -- "$0")")/.."
 : "${acmesh=}"
 : "${domain=}"
 
+# HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
+systemctl disable --now rsyslog || :
+
 ./scripts/install-dependencies.sh
 ./scripts/prepare.sh --local-mode
 
