@@ -71,6 +71,7 @@ yq $update '
     })
   | with(select(strenv(setup_keycloak) != "");
     .eaas.enable_user_auth = true
+    | .eaas.enable_devmode = true
     | .keycloak = {
       "enabled": true,
       "admin_user": "admin",
