@@ -1,6 +1,7 @@
 #!/bin/sh -xeu
 cd -- "$(dirname -- "$(realpath -- "$0")")/.."
 
+: "${dry_run=}"
 : "${setup_keycloak=}"
 : "${eaas_ansible_repo=}"
 : "${eaas_ansible_branch=}"
@@ -9,11 +10,23 @@ cd -- "$(dirname -- "$(realpath -- "$0")")/.."
 : "${acmesh=}"
 : "${domain=}"
 
-# HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
-systemctl disable --now rsyslog || :
+_not_dry() {
+  if ! test "$dry_run"; then
+    "$@"
+  fi
+}
 
-./scripts/install-dependencies.sh
-./scripts/prepare.sh --local-mode
+# HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
+_not_dry systemctl disable --now rsyslog || :
+
+_not_dry ./scripts/install-dependencies.sh
+
+if ! type yq; then
+  curl -fL https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 |
+    sudo install /dev/stdin /usr/local/bin/yq
+fi
+
+_not_dry ./scripts/prepare.sh --local-mode
 
 (
   set --
@@ -31,26 +44,45 @@ systemctl disable --now rsyslog || :
 hosts="config/localhost.yaml.template"
 config="config/eaasi.yaml.template"
 
-ln -sr "$hosts" artifacts/config/hosts.yaml
-ln -sr "$config" artifacts/config/eaasi.yaml
+_not_dry ln -sr "$hosts" artifacts/config/hosts.yaml
+_not_dry ln -sr "$config" artifacts/config/eaasi.yaml
 
-sed -i 's/<local-user>/root/g' "$hosts"
-sed -i 's/eaas_service_name: "eaas-local"/eaas_service_name: "eaas"/g' "$config"
-
-if test "$docker_image_tag"; then
-  sed -i 's/image: "eaas\/eaas-appserver"/image: "eaas\/eaas-appserver:'"$docker_image_tag"'"/' "$config"
+update=""
+if ! test "$dry_run"; then
+  update="-i"
 fi
 
-if test "$https" && test "$domain"; then
-  cat >> "$hosts" << EOF
-      eaas_hostname: $domain
-EOF
-  sed -i 's/port: 8080/port: 443/' "$config"
-  sed -i '/#ssl:/s/#//' "$config"
-  sed -i '/#  enabled/s/#//' "$config"
-fi
+yq $update '
+  .all.hosts.eaas-gateway.ansible_user = "root"
+  | with(select(strenv(https) != "");
+    .all.hosts.eaas-gateway.eaas_hostname = strenv(domain))
+' "$hosts"
 
-if test "$acmesh" && test "$domain"; then
+yq $update '
+  .host.eaas_service_name = "eaas"
+  | with(select(strenv(docker_image_tag) != "");
+    .docker.image = strenv(docker_image_tag))
+  | with(select(strenv(https) != "");
+    .docker.port = 443 |
+    .docker.ssl = {
+      "enabled": true,
+      "certificate": "./artifacts/ssl/certificate.crt",
+      "private_key": "./artifacts/ssl/private.key"
+    })
+  | with(select(strenv(setup_keycloak) != "");
+    .eaas.enable_user_auth = true
+    | .keycloak = {
+      "enabled": true,
+      "admin_user": "admin",
+      "admin_password": "admin"}
+    | with(select(strenv(https) == "");
+      .keycloak.frontend_url = "http://localhost:8080/auth")
+    | with(select(strenv(https) != "");
+      .keycloak.frontend_url = "https://" + strenv(domain) + "/auth")
+  )
+' "$config"
+
+if ! test "$dry_run" && test "$acmesh" && test "$domain"; then
   export HOME=/root
   curl https://get.acme.sh | sh
 
@@ -63,27 +95,9 @@ if test "$acmesh" && test "$domain"; then
   ~/.acme.sh/acme.sh --standalone --issue --domain "$domain" --email "webmaster@$domain" --server buypass
 
   mkdir -p artifacts/ssl
-  sed -Ei '/#  certificate:/s/#//' "$config"
-  sed -Ei '/#  private_key:/s/#//' "$config"
   ln -sr "$HOME/.acme.sh/$domain/$domain.key" artifacts/ssl/private.key
   ln -sr "$HOME/.acme.sh/$domain/fullchain.cer" artifacts/ssl/certificate.crt
 fi
 
-if test "$setup_keycloak"; then
-frontend_url="http://localhost:8080/auth"
-if test "$https"; then
-  frontend_url="https://$domain/auth"
-fi
-cat >> "$config" << EOF
-
-keycloak:
-  enabled: true
-  frontend_url: "$frontend_url"
-  admin_user: admin
-  admin_password: admin
-EOF
-sed -i '/^eaas:/a\  enable_user_auth: true' "$config"
-fi
-
-./scripts/deploy.sh
-chmod -R ugo=u /eaas-home
+_not_dry ./scripts/deploy.sh
+_not_dry chmod -R ugo=u /eaas-home
