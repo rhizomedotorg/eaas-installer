@@ -43,6 +43,7 @@ demo_ui:
 resolver:
   cache:
     enabled: true
+    capacity: 10g
 
 eaas_project_id: "emulation-as-a-service%2feaas-server"
 ui_project_id: "emulation-as-a-service%2fdemo-ui"
