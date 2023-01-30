@@ -96,8 +96,8 @@ if ! test "$dry_run" && test "$acmesh" && test "$domain"; then
   ~/.acme.sh/acme.sh --standalone --issue --domain "$domain" --email "webmaster@$domain" --server buypass
 
   mkdir -p artifacts/ssl
-  ln -sr "$HOME/.acme.sh/$domain/$domain.key" artifacts/ssl/private.key
-  ln -sr "$HOME/.acme.sh/$domain/fullchain.cer" artifacts/ssl/certificate.crt
+  ln -sr "$HOME/.acme.sh/$domain"*"/$domain.key" artifacts/ssl/private.key
+  ln -sr "$HOME/.acme.sh/$domain"*"/fullchain.cer" artifacts/ssl/certificate.crt
 fi
 
 _not_dry ./scripts/deploy.sh
