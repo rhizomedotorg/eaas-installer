@@ -29,14 +29,16 @@ fi
 _not_dry ./scripts/prepare.sh --local-mode
 
 (
-  set --
+  update=
   if test "$eaas_ansible_repo"; then
-    set -- "$@" --reference "$eaas_ansible_repo"
+    update=1
+    git submodule set-url -- eaas/ansible "$eaas_ansible_repo"
   fi
   if test "$eaas_ansible_branch"; then
-    set -- "$@" --branch "$eaas_ansible_branch"
+    update=1
+    git submodule set-branch --branch "$eaas_ansible_branch" -- eaas/ansible
   fi
-  if test "$#" != 0; then
+  if test "$update"; then
     git submodule update --remote "$@" eaas/ansible
   fi
 )
