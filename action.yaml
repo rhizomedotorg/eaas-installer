@@ -13,10 +13,10 @@ runs:
   steps:
   - uses: actions/checkout@v3
   - name: Set branch env var
-    run: echo "OTHER_REPO_BRANCH=$(bash -c './branches.sh ${{inputs.isBackend}} ${{inputs.branch}}' )" >> $GITHUB_ENV
+    run: echo "OTHER_REPO_BRANCH=$(bash -c '$GITHUB_ACTION_PATH/branches.sh ${{inputs.isBackend}} ${{inputs.branch}}' )" >> $GITHUB_ENV
     shell: bash
   - name: Test if var was set properly
-    run: echo $OTHER_REPO_BRANCH
+    run: echo "Branch that will be used for the other repository $OTHER_REPO_BRANCH"
     shell: bash
 
     # TODO
