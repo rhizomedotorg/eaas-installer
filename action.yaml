@@ -8,6 +8,7 @@ inputs:
     description: "Target branch for test execution. The artifacts from these branches will be set up by the local installer"
     required: true
 
+
 runs:
   using: "composite"
   steps:
@@ -17,6 +18,12 @@ runs:
     shell: bash
   - name: Test if var was set properly
     run: echo "Branch that will be used for the other repository $OTHER_REPO_BRANCH"
+    shell: bash
+  - name: Test echo
+    run: echo Test 123
+    shell: bash
+  - name: Test echo to output
+    run: echo "Test 123 Output" >> $GITHUB_OUTPUT
     shell: bash
 
     # TODO
