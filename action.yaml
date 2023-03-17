@@ -14,10 +14,12 @@ runs:
   - uses: actions/checkout@v3
   - name: Set branch env var
     run: echo "OTHER_REPO_BRANCH=$(bash -c './branches.sh ${{inputs.isBackend}} ${{inputs.branch}}' )" >> $GITHUB_ENV
+    shell: bash
   - name: Test if var was set properly
     run: echo $OTHER_REPO_BRANCH
+    shell: bash
 
-# TODO
+    # TODO
 # run Python script to insert branches into config (use yaml)
 # use provided branch for repo (UI if !isBackend, Server if isBackend)
 # and OTHER_REPO_BRANCH for other repo
@@ -38,6 +40,7 @@ runs:
       cd ..
       sudo eaas-local-installer/scripts/install-test-server.sh || :
       )
+    shell: bash
   - name: Wait for server to be ready
     run: while ! curl -f http://localhost/emil/Emil/buildInfo; do sleep 10; done
   - name: Confirm Server is Ready
