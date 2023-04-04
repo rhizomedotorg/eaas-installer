@@ -9,6 +9,8 @@ cd -- "$(dirname -- "$(realpath -- "$0")")/.."
 : "${https=}"
 : "${acmesh=}"
 : "${domain=}"
+: "${ui_branch=}"
+: "${server_branch=}"
 
 _not_dry() {
   if ! test "$dry_run"; then
@@ -64,6 +66,10 @@ yq $update '
   .host.eaas_service_name = "eaas"
   | with(select(strenv(docker_image_tag) != "");
     .docker.image = strenv(docker_image_tag))
+  | with(select(strenv(server_branch) != "");
+    .eaas.version=strenv(server_branch))
+  | with(select(strenv(ui_branch) != "");
+    .demo_ui.version=strenv(ui_branch))
   | with(select(strenv(https) != "");
     .docker.port = 443 |
     .docker.ssl = {

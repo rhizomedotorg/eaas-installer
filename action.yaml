@@ -12,6 +12,13 @@ inputs:
 runs:
   using: "composite"
   steps:
+  - name: pwd test
+    run: pwd
+    shell: bash
+  - name: ls test
+    run: ls -la
+    shell: bash
+
   - uses: actions/checkout@v3
   - name: Set branch env var
     run: echo "OTHER_REPO_BRANCH=$(bash $GITHUB_ACTION_PATH/branches.sh ${{inputs.isBackend}} ${{inputs.branch}} )" >> $GITHUB_ENV
@@ -39,7 +46,7 @@ runs:
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
       cd ..
-      sudo eaas-local-installer/scripts/install-test-server.sh || :
+      sudo ui_branch=playwright-action eaas-local-installer/scripts/install-test-server.sh || :
       )
     shell: bash
   - name: Wait for server to be ready

@@ -10,7 +10,7 @@ fi
 
 _check_branch=$(git ls-remote --heads ${_repo_url} ${_branch_name})
 if [[ -z ${_check_branch} ]]; then
-    echo "master"
+    echo "HEAD"
 else
     echo "${_branch_name}"
 fi
