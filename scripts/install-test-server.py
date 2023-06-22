@@ -18,7 +18,7 @@ def yaml_load(path):
 
 
 def yaml_save(path, obj):
-    string = yaml.safe_dump(obj)
+    string = yaml.safe_dump(obj, sort_keys=False)
     print(f"{path}:\n{string}")
     if not dry_run:
         with open(path, "w") as file:
