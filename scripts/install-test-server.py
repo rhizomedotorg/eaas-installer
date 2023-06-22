@@ -43,7 +43,6 @@ cmd("./scripts/install-dependencies.sh")
 cmd("./scripts/prepare.sh", "--local-mode")
 
 
-@lambda fn: fn()
 def update_git():
     update = False
 
@@ -60,6 +59,8 @@ def update_git():
     if update:
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
 
+
+update_git()
 
 hosts = yaml_load("config/localhost.yaml.template")
 config = yaml_load("config/eaasi.yaml.template")
