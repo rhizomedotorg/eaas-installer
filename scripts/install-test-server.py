@@ -74,6 +74,10 @@ if https:
 
 config["host"]["eaas_service_name"] = "eaas"
 
+config["coturn"] = {
+    "enabled": True,
+}
+
 if docker_image_tag:
     config["docker"]["image"] = docker_image_tag
 
