@@ -50,7 +50,7 @@ runs:
       )
     shell: bash
   - name: Wait for server to be ready
-    run: while ! curl -f http://localhost/emil/Emil/buildInfo; do sleep 10; done
+    run: while ! curl -f http://localhost/emil/admin/build-info; do sleep 10; done
     shell: bash
   - name: Confirm Server is Ready
     run: echo "Server is Ready!"
