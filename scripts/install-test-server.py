@@ -2,6 +2,7 @@
 
 import os
 import subprocess
+import functools
 import yaml
 
 
@@ -24,6 +25,8 @@ def yaml_save(path, obj):
         with open(path, "w") as file:
             file.write(string)
 
+
+print = functools.partial(print, flush=True)
 
 os.chdir(f"{os.path.dirname(os.path.realpath(__file__))}/..")
 
