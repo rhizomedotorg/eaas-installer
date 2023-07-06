@@ -39,6 +39,10 @@ https = os.environ.get("https")
 acmesh = os.environ.get("acmesh")
 domain = os.environ.get("domain")
 
+eaas_server_ear_url = os.environ.get("eaas_server_ear_url")
+ui_artifact_url = os.environ.get("ui_artifact_url")
+
+
 # HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
 cmd("systemctl", "disable", "--now", "rsyslog", check=False)
 
@@ -124,6 +128,14 @@ if acmesh:
         domain, shell=True)
     cmd('ln -sr -- "$HOME/.acme.sh/$0"*"/fullchain.cer" artifacts/ssl/certificate.crt',
         domain, shell=True)
+
+if eaas_server_ear_url:
+    config["eaas_server_ear_url"] = eaas_server_ear_url
+if ui_artifact_url:
+    config["ui_artifact_url"] = ui_artifact_url
+
+print("Hosts:", hosts)
+print("Config:", config)
 
 yaml_save("artifacts/config/hosts.yaml", hosts)
 yaml_save("artifacts/config/eaasi.yaml", config)
