@@ -7,10 +7,14 @@ runs:
   - name: ls test
     run: ls -la
     shell: bash
-  - uses: actions/checkout@v3
   - uses: actions/setup-node@v3
     with:
       node-version: 18
+  - uses: actions/checkout@v3
+    with:
+      repository: emulation-as-a-service/eaas-installer
+      ref: github-actions
+      path: ./eaas-installer
   - name: Setup Test Server
     run: |
       # HACK: using port 8080 is broken in eaas.dev/eaas-ansible - TODO move to python script
