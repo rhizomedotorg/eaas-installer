@@ -18,10 +18,10 @@ runs:
   - name: Setup Test Server
     run: |
       # HACK: using port 8080 is broken in eaas.dev/eaas-ansible - TODO move to python script
-      sed -i "s/port: 8080/port: 80/" config/eaasi.yaml.template
+      sed -i "s/port: 8080/port: 80/" eaas-installer/config/eaasi.yaml.template
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
-      sudo scripts/install-test-server.py || :
+      sudo eaas-installer/scripts/install-test-server.py || :
     shell: bash
   - name: Wait for server to be ready
     run: while ! curl -f http://localhost/emil/admin/build-info; do sleep 10; done
