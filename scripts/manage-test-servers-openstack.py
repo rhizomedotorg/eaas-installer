@@ -3,7 +3,6 @@
 import argparse
 import base64
 import datetime
-import glob
 import os
 import pathlib
 import re
@@ -55,26 +54,6 @@ git clone {
       f'--branch {quote(args.installer_branch)}' if args.installer_branch else ""
     } --recursive https://gitlab.com/emulation-as-a-service/eaas-installer
 eaas-installer/scripts/install-test-server.py
-
-curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/usr/local sh
-
-auth="$(python3 -c 'print(__import__("yaml").safe_load(open(__import__("glob").glob("/eaas*/docker-compose.yaml")[0]))["services"]["keycloak"]["environment"]["KEYCLOAK_USER"])')"
-if test "$auth"; then
-  auth="admin:$auth@"
-fi
-
-if test "${{https-}}"; then
-  url="https://${{auth}}$domain"
-else
-  url="http://${{auth}}localhost"
-fi
-
-while ! curl -f "$url/emil/admin/build-info"; do sleep 10; done
-
-git clone --rec https://eaas.dev/eaas-client
-eaas-client/contrib/cli/import-tests "$url"
-
-git clone --rec https://eaas.dev/eaas-debug /eaas-debug
 """.lstrip()
 
     server = nonone(
@@ -235,8 +214,8 @@ subparser.add_argument(
 subparser.add_argument(
     "env",
     nargs="*",
-    default=["https=1", "acmesh=1", "setup_keycloak=1"],
-    help="environment variables (key=value) to set for eaas-installer on VM (see `scripts/install-test-server.py`). Example: https=1 acmesh=1 setup_keycloak=1 eaas_ansible_branch=HEAD",
+    default=["https=1", "acmesh=1", "setup_keycloak=1", "import_test_environments=1"],
+    help="environment variables (key=value) to set for eaas-installer on VM (see `scripts/install-test-server.py`). Example: https=1 acmesh=1 setup_keycloak=1 import_test_environments=1 eaas_ansible_branch=HEAD",
 )
 
 args = parser.parse_args()

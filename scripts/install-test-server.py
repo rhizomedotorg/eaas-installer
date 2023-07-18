@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import functools
+import glob
 import os
 import subprocess
 
@@ -39,6 +40,11 @@ docker_image_tag = os.environ.get("docker_image_tag")
 https = os.environ.get("https")
 acmesh = os.environ.get("acmesh")
 domain = os.environ.get("domain")
+import_test_environments = os.environ.get("import_test_environments")
+wait_for_eaas_server = os.environ.get("wait_for_eaas_server")
+
+if import_test_environments:
+    wait_for_eaas_server = "1"
 
 # HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
 cmd("systemctl", "disable", "--now", "rsyslog", check=False)
@@ -152,3 +158,36 @@ yaml_save("artifacts/config/eaasi.yaml", config)
 
 cmd("./scripts/deploy.sh")
 cmd("chmod", "-R", "ugo=u", "/eaas-home")
+
+auth = ""
+if setup_keycloak:
+    docker_compose = yaml_load(glob.glob("/eaas*/docker-compose.yaml")[0])
+    user = docker_compose["services"]["keycloak"]["environment"]["KEYCLOAK_USER"]
+    password = docker_compose["services"]["keycloak"]["environment"][
+        "KEYCLOAK_PASSWORD"
+    ]
+    auth = f"{user}:{password}@"
+
+url = f"http://{auth}localhost:{config['docker']['port']}"
+if https:
+    url = f"https://{auth}{domain}:{config['docker']['port']}"
+
+if wait_for_eaas_server:
+    cmd(
+        'while ! curl -f "$0"; do sleep 10; done',
+        f"{url}/emil/admin/build-info",
+        shell=True,
+    )
+
+if import_test_environments:
+    cmd("git", "clone", "--recurse-submodules", "https://eaas.dev/eaas-client")
+    cmd("eaas-client/contrib/cli/install-deno")
+    cmd("eaas-client/contrib/cli/import-tests", url)
+
+    cmd(
+        "git",
+        "clone",
+        "--recurse-submodules",
+        "https://eaas.dev/eaas-debug",
+        "/eaas-debug",
+    )
