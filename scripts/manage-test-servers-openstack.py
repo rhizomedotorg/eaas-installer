@@ -71,9 +71,8 @@ fi
 
 while ! curl -f "$url/emil/admin/build-info"; do sleep 10; done
 
-git clone --rec https://eaas.dev/eaas-cli
-cd eaas-cli
-./import-tests "$url"
+git clone --rec https://eaas.dev/eaas-client
+eaas-client/contrib/cli/import-tests "$url"
 """.lstrip()
 
     server = nonone(
