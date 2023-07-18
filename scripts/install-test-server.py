@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+import functools
 import os
 import subprocess
-import functools
+
 import yaml
 
 
@@ -51,13 +52,19 @@ def update_git():
 
     if eaas_ansible_repo:
         update = True
-        cmd("git", "submodule", "set-url", "--",
-            "eaas/ansible", eaas_ansible_repo)
+        cmd("git", "submodule", "set-url", "--", "eaas/ansible", eaas_ansible_repo)
 
     if eaas_ansible_branch:
         update = True
-        cmd("git", "submodule", "set-branch", "--branch",
-            eaas_ansible_branch, "--", "eaas/ansible")
+        cmd(
+            "git",
+            "submodule",
+            "set-branch",
+            "--branch",
+            eaas_ansible_branch,
+            "--",
+            "eaas/ansible",
+        )
 
     if update:
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
@@ -116,14 +123,29 @@ if acmesh:
     # Use webmaster@$domain as generic email address as it is
     # used by both https://www.rfc-editor.org/rfc/rfc2142 and
     # https://github.com/cabforum/servercert/blob/main/docs/BR.md#32244-constructed-email-to-domain-contact
-    cmd(os.path.expanduser("~/.acme.sh/acme.sh"), "--standalone", "--issue",
-        "--domain", domain, "--email", f"webmaster@{domain}", "--server", "buypass")
+    cmd(
+        os.path.expanduser("~/.acme.sh/acme.sh"),
+        "--standalone",
+        "--issue",
+        "--domain",
+        domain,
+        "--email",
+        f"webmaster@{domain}",
+        "--server",
+        "buypass",
+    )
 
     cmd("mkdir", "-p", "artifacts/ssl")
-    cmd('ln -sr -- "$HOME/.acme.sh/$0"*"/$0.key" artifacts/ssl/private.key',
-        domain, shell=True)
-    cmd('ln -sr -- "$HOME/.acme.sh/$0"*"/fullchain.cer" artifacts/ssl/certificate.crt',
-        domain, shell=True)
+    cmd(
+        'ln -sr -- "$HOME/.acme.sh/$0"*"/$0.key" artifacts/ssl/private.key',
+        domain,
+        shell=True,
+    )
+    cmd(
+        'ln -sr -- "$HOME/.acme.sh/$0"*"/fullchain.cer" artifacts/ssl/certificate.crt',
+        domain,
+        shell=True,
+    )
 
 yaml_save("artifacts/config/hosts.yaml", hosts)
 yaml_save("artifacts/config/eaasi.yaml", config)
