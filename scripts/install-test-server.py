@@ -40,10 +40,11 @@ docker_image_tag = os.environ.get("docker_image_tag")
 https = os.environ.get("https")
 acmesh = os.environ.get("acmesh")
 domain = os.environ.get("domain")
-import_test_environments = os.environ.get("import_test_environments")
 wait_for_eaas_server = os.environ.get("wait_for_eaas_server")
+import_test_environments = os.environ.get("import_test_environments")
+show_summary = os.environ.get("show_summary")
 
-if import_test_environments:
+if import_test_environments or show_summary:
     wait_for_eaas_server = "1"
 
 # HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
@@ -184,6 +185,7 @@ if import_test_environments:
     cmd("eaas-client/contrib/cli/install-deno")
     cmd("eaas-client/contrib/cli/import-tests", url)
 
+if show_summary:
     cmd(
         "git",
         "clone",
@@ -191,3 +193,5 @@ if import_test_environments:
         "https://eaas.dev/eaas-debug",
         "/eaas-debug",
     )
+
+    cmd("/eaas-debug/show-summary")

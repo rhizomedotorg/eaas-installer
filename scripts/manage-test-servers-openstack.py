@@ -214,8 +214,14 @@ subparser.add_argument(
 subparser.add_argument(
     "env",
     nargs="*",
-    default=["https=1", "acmesh=1", "setup_keycloak=1", "import_test_environments=1"],
-    help="environment variables (key=value) to set for eaas-installer on VM (see `scripts/install-test-server.py`). Example: https=1 acmesh=1 setup_keycloak=1 import_test_environments=1 eaas_ansible_branch=HEAD",
+    default=[
+        "https=1",
+        "acmesh=1",
+        "setup_keycloak=1",
+        "import_test_environments=1",
+        "show_summary=1",
+    ],
+    help="environment variables (key=value) to set for eaas-installer on VM (see `scripts/install-test-server.py`). Example: https=1 acmesh=1 setup_keycloak=1 import_test_environments=1 show_summary=1 eaas_ansible_branch=HEAD",
 )
 
 args = parser.parse_args()
