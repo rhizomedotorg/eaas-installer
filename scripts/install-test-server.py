@@ -50,6 +50,7 @@ if import_test_environments or show_summary:
 eaas_server_ear_url = os.environ.get("eaas_server_ear_url")
 ui_artifact_url = os.environ.get("ui_artifact_url")
 
+print("All env variables in python:", os.environ)
 
 # HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
 cmd("systemctl", "disable", "--now", "rsyslog", check=False)
