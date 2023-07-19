@@ -170,7 +170,8 @@ print("Config:", config)
 yaml_save("artifacts/config/hosts.yaml", hosts)
 yaml_save("artifacts/config/eaasi.yaml", config)
 
-cmd("./scripts/deploy.sh")
+# HACK: for check=False, see https://gitlab.com/emulation-as-a-service/eaas-installer/-/issues/6
+cmd("./scripts/deploy.sh", check=False)
 cmd("chmod", "-R", "ugo=u", "/eaas-home")
 
 auth = ""
