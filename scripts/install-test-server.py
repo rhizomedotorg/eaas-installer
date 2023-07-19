@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 
+import functools
+import glob
 import os
 import subprocess
-import functools
+
 import yaml
 
 
@@ -38,6 +40,12 @@ docker_image_tag = os.environ.get("docker_image_tag")
 https = os.environ.get("https")
 acmesh = os.environ.get("acmesh")
 domain = os.environ.get("domain")
+wait_for_eaas_server = os.environ.get("wait_for_eaas_server")
+import_test_environments = os.environ.get("import_test_environments")
+show_summary = os.environ.get("show_summary")
+
+if import_test_environments or show_summary:
+    wait_for_eaas_server = "1"
 
 eaas_server_ear_url = os.environ.get("eaas_server_ear_url")
 ui_artifact_url = os.environ.get("ui_artifact_url")
@@ -55,13 +63,19 @@ def update_git():
 
     if eaas_ansible_repo:
         update = True
-        cmd("git", "submodule", "set-url", "--",
-            "eaas/ansible", eaas_ansible_repo)
+        cmd("git", "submodule", "set-url", "--", "eaas/ansible", eaas_ansible_repo)
 
     if eaas_ansible_branch:
         update = True
-        cmd("git", "submodule", "set-branch", "--branch",
-            eaas_ansible_branch, "--", "eaas/ansible")
+        cmd(
+            "git",
+            "submodule",
+            "set-branch",
+            "--branch",
+            eaas_ansible_branch,
+            "--",
+            "eaas/ansible",
+        )
 
     if update:
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
@@ -120,14 +134,29 @@ if acmesh:
     # Use webmaster@$domain as generic email address as it is
     # used by both https://www.rfc-editor.org/rfc/rfc2142 and
     # https://github.com/cabforum/servercert/blob/main/docs/BR.md#32244-constructed-email-to-domain-contact
-    cmd(os.path.expanduser("~/.acme.sh/acme.sh"), "--standalone", "--issue",
-        "--domain", domain, "--email", f"webmaster@{domain}", "--server", "buypass")
+    cmd(
+        os.path.expanduser("~/.acme.sh/acme.sh"),
+        "--standalone",
+        "--issue",
+        "--domain",
+        domain,
+        "--email",
+        f"webmaster@{domain}",
+        "--server",
+        "buypass",
+    )
 
     cmd("mkdir", "-p", "artifacts/ssl")
-    cmd('ln -sr -- "$HOME/.acme.sh/$0"*"/$0.key" artifacts/ssl/private.key',
-        domain, shell=True)
-    cmd('ln -sr -- "$HOME/.acme.sh/$0"*"/fullchain.cer" artifacts/ssl/certificate.crt',
-        domain, shell=True)
+    cmd(
+        'ln -sr -- "$HOME/.acme.sh/$0"*"/$0.key" artifacts/ssl/private.key',
+        domain,
+        shell=True,
+    )
+    cmd(
+        'ln -sr -- "$HOME/.acme.sh/$0"*"/fullchain.cer" artifacts/ssl/certificate.crt',
+        domain,
+        shell=True,
+    )
 
 if eaas_server_ear_url:
     config["eaas_server_ear_url"] = eaas_server_ear_url
@@ -142,3 +171,39 @@ yaml_save("artifacts/config/eaasi.yaml", config)
 
 cmd("./scripts/deploy.sh")
 cmd("chmod", "-R", "ugo=u", "/eaas-home")
+
+auth = ""
+if setup_keycloak:
+    docker_compose = yaml_load(glob.glob("/eaas*/docker-compose.yaml")[0])
+    user = docker_compose["services"]["keycloak"]["environment"]["KEYCLOAK_USER"]
+    password = docker_compose["services"]["keycloak"]["environment"][
+        "KEYCLOAK_PASSWORD"
+    ]
+    auth = f"{user}:{password}@"
+
+url = f"http://{auth}localhost:{config['docker']['port']}"
+if https:
+    url = f"https://{auth}{domain}:{config['docker']['port']}"
+
+if wait_for_eaas_server:
+    cmd(
+        'while ! curl -f "$0"; do sleep 10; done',
+        f"{url}/emil/admin/build-info",
+        shell=True,
+    )
+
+if import_test_environments:
+    cmd("git", "clone", "--recurse-submodules", "https://eaas.dev/eaas-client")
+    cmd("eaas-client/contrib/cli/install-deno")
+    cmd("eaas-client/contrib/cli/import-tests", url)
+
+if show_summary:
+    cmd(
+        "git",
+        "clone",
+        "--recurse-submodules",
+        "https://eaas.dev/eaas-debug",
+        "/eaas-debug",
+    )
+
+    cmd("/eaas-debug/show-summary")
