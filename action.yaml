@@ -15,11 +15,14 @@ runs:
       repository: emulation-as-a-service/eaas-installer
       ref: github-actions
       path: ./eaas-installer
+  - name: Add UI location to env
+    run: echo "wait_for_eaas_server=1" >> "$GITHUB_ENV"
+    shell: bash
   - name: Setup Test Server
     run: |
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
-      sudo -E eaas-installer/scripts/install-test-server.py || :
+      sudo -E eaas-installer/scripts/install-test-server.py  || :
     shell: bash
 #  - name: Wait for server to be ready
 #    run: while ! curl -f http://localhost/emil/admin/build-info; do sleep 10; done
