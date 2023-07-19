@@ -6,7 +6,7 @@ host:
 
 docker:
   image: "eaas/eaas-appserver"
-  port: 8080
+  port: 80
 
   # to enable SSL with custom certificate,
   # uncomment the following lines...

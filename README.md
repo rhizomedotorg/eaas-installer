@@ -4,7 +4,7 @@ This installer is able to deploy EaaS on a local computer (localhost) for testin
 
 - This will work on Linux and Mac OSX. Other OS might work, but untested.
 - By default EaaS will be installed as a systemd service and requires Docker to be installed as a systemd service as well.
-- The EaaS interface will be accessible at `http://localhost:8080`.
+- The EaaS interface will be accessible at `http://localhost:80`.
 
 ## Preconditions
 
@@ -75,7 +75,7 @@ The installation process is supposed to run only once. To update the setup with 
 
     docker:
       image: "eaas/eaas-appserver"
-      port: 8080	# Don't change the port.
+      port: 80	# Cannot be 8080, see https://gitlab.com/emulation-as-a-service/eaas-ansible/-/issues/5
 
     ui:
       git_branch: "master"
