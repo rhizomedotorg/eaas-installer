@@ -118,7 +118,7 @@ def info(name, hostname):
     return f"""
 {name}
 ssh ubuntu@{hostname}
-ssh -L 8080:localhost:8080 ubuntu@{hostname}
+ssh -L 80:localhost:80 ubuntu@{hostname}
 https://{hostname}/admin
 """.lstrip()
 
