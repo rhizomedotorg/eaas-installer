@@ -160,6 +160,8 @@ if acmesh:
     )
 
 if eaas_server_ear_url:
+    if not eaas_server_ear_url.startswith("file://"):
+        eaas_server_ear_url = "file://" + eaas_server_ear_url
     config["eaas_server_ear_url"] = eaas_server_ear_url
 if ui_artifact_url:
     config["ui_artifact_url"] = ui_artifact_url
