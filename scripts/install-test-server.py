@@ -164,6 +164,8 @@ if eaas_server_ear_url:
         eaas_server_ear_url = "file://" + eaas_server_ear_url
     config["eaas_server_ear_url"] = eaas_server_ear_url
 if ui_artifact_url:
+    if not ui_artifact_url.startswith("file://"):
+        ui_artifact_url = "file://" + ui_artifact_url
     config["ui_artifact_url"] = ui_artifact_url
 
 print("Hosts:", hosts)
