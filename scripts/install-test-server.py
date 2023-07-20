@@ -3,7 +3,9 @@
 import functools
 import glob
 import os
+import pathlib
 import subprocess
+from urllib.parse import urlparse
 
 import yaml
 
@@ -30,6 +32,7 @@ def yaml_save(path, obj):
 
 print = functools.partial(print, flush=True)
 
+wd = os.getcwd()
 os.chdir(f"{os.path.dirname(os.path.realpath(__file__))}/..")
 
 dry_run = bool(os.environ.get("dry_run"))
@@ -160,12 +163,12 @@ if acmesh:
     )
 
 if eaas_server_ear_url:
-    if not eaas_server_ear_url.startswith("file://"):
-        eaas_server_ear_url = "file://" + eaas_server_ear_url
+    if not urlparse(eaas_server_ear_url).scheme:
+        eaas_server_ear_url = pathlib.Path(wd, eaas_server_ear_url).resolve().as_uri()
     config["eaas_server_ear_url"] = eaas_server_ear_url
 if ui_artifact_url:
-    if not ui_artifact_url.startswith("file://"):
-        ui_artifact_url = "file://" + ui_artifact_url
+    if not urlparse(ui_artifact_url).scheme:
+        ui_artifact_url = pathlib.Path(wd, ui_artifact_url).resolve().as_uri()
     config["ui_artifact_url"] = ui_artifact_url
 
 print("Hosts:", hosts)

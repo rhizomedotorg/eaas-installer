@@ -1,6 +1,15 @@
 name: Set up local EaaS instance
 description: "Sets up a local EaaS instance (for testing)"
 
+inputs:
+  eaas_server_url:
+    description: "The URL or path of the server ear"
+    required: false
+
+  eaas_ui_url:
+    description: "The URL or path of the zipped UI"
+    required: false
+
 runs:
   using: "composite"
   steps:
@@ -15,15 +24,15 @@ runs:
       repository: emulation-as-a-service/eaas-installer
       ref: github-actions
       path: ./eaas-installer
-  - name: Add UI location to env
-    run: echo "wait_for_eaas_server=1" >> "$GITHUB_ENV"
-    shell: bash
   - name: Setup Test Server
     run: |
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
       sudo -E eaas-installer/scripts/install-test-server.py
     shell: bash
+    env:
+      eaas_server_ear_url: ${{inputs.eaas_server_url}}
+      ui_artifact_url: ${{inputs.eaas_ui_url}}
 #  - name: Wait for server to be ready
 #    run: while ! curl -f http://localhost/emil/admin/build-info; do sleep 10; done
 #    shell: bash
