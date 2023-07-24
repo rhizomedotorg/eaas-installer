@@ -84,6 +84,20 @@ def update_git():
     if update:
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
 
+def handle_artifacts(artifact_url_path, artifact_type):
+    if artifact_url_path:
+        print(f"{artifact_type} was provided:")
+        if not urlparse(artifact_url_path).scheme:
+            artifact_url_path = pathlib.Path(wd, artifact_url_path).resolve().as_uri()
+            print(f"--- {artifact_type} was provided as a path, not as URL")
+        else:
+            print(f"--- {artifact_type} was provided as URL.")
+
+        print(f"Using {artifact_type}:", artifact_url_path)
+        config[artifact_type] = artifact_url_path
+
+    else:
+        print("No eaas-server.ear was provided. Defaulting to latest main build.")
 
 update_git()
 
@@ -162,14 +176,8 @@ if acmesh:
         shell=True,
     )
 
-if eaas_server_ear_url:
-    if not urlparse(eaas_server_ear_url).scheme:
-        eaas_server_ear_url = pathlib.Path(wd, eaas_server_ear_url).resolve().as_uri()
-    config["eaas_server_ear_url"] = eaas_server_ear_url
-if ui_artifact_url:
-    if not urlparse(ui_artifact_url).scheme:
-        ui_artifact_url = pathlib.Path(wd, ui_artifact_url).resolve().as_uri()
-    config["ui_artifact_url"] = ui_artifact_url
+handle_artifacts(eaas_server_ear_url, "eaas_server_ear_url")
+handle_artifacts(ui_artifact_url, "ui_artifact_url")
 
 print("Hosts:", hosts)
 print("Config:", config)
