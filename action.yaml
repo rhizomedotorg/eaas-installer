@@ -1,21 +1,9 @@
 name: Set up local EaaS instance
 description: "Sets up a local EaaS instance (for testing)"
 
-inputs:
-  eaas_server_url:
-    description: "The URL or path of the server ear"
-    required: false
-
-  eaas_ui_url:
-    description: "The URL or path of the zipped UI"
-    required: false
-
 runs:
   using: "composite"
   steps:
-  - name: ls test
-    run: ls -la
-    shell: bash
   - uses: actions/setup-node@v3
     with:
       node-version: 18
@@ -30,12 +18,6 @@ runs:
       sudo apt remove -y moby-containerd moby-runc
       sudo -E eaas-installer/scripts/install-test-server.py
     shell: bash
-    env:
-      eaas_server_ear_url: ${{inputs.eaas_server_url}}
-      ui_artifact_url: ${{inputs.eaas_ui_url}}
-#  - name: Wait for server to be ready
-#    run: while ! curl -f http://localhost/emil/admin/build-info; do sleep 10; done
-#    shell: bash
   - name: Confirm Server is Ready
     run: echo "Server is Ready!"
     shell: bash
