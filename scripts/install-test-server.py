@@ -50,8 +50,8 @@ show_summary = os.environ.get("show_summary")
 if import_test_environments or show_summary:
     wait_for_eaas_server = "1"
 
-eaas_server_ear_url = os.environ.get("eaas_server_ear_url")
-ui_artifact_url = os.environ.get("ui_artifact_url")
+eaas_server_ear_url = os.environ.get("eaas_server_url")
+ui_artifact_url = os.environ.get("eaas_ui_url")
 
 print("All env variables in python:", os.environ)
 
