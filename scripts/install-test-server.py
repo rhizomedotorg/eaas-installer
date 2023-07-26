@@ -121,6 +121,9 @@ if setup_keycloak:
         config["keycloak"]["frontend_url"] = f"http://localhost:8080/auth"
 
 if acmesh:
+    if acmesh == "1":
+        acmesh = "buypass"
+
     os.environ["HOME"] = "/root"
     cmd("curl https://get.acme.sh | sh", shell=True)
 
@@ -139,7 +142,7 @@ if acmesh:
         "--email",
         f"webmaster@{domain}",
         "--server",
-        "buypass",
+        acmesh,
     )
 
     cmd("mkdir", "-p", "artifacts/ssl")
