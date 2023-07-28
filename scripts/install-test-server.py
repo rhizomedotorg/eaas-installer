@@ -121,7 +121,7 @@ if setup_keycloak:
         config["keycloak"]["frontend_url"] = f"http://localhost:8080/auth"
 
 if acmesh:
-    if acmesh == "1":
+    if acmesh in {"1", "true"}:
         acmesh = "buypass"
 
     os.environ["HOME"] = "/root"
