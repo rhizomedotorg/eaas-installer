@@ -196,6 +196,7 @@ if show_summary:
         "--recurse-submodules",
         "https://eaas.dev/eaas-debug",
         "/eaas-debug",
+        umask=0o000,
     )
 
     cmd("/eaas-debug/show-summary")
