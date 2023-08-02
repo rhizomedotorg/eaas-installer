@@ -4,22 +4,11 @@ description: "Sets up a local EaaS instance (for testing)"
 runs:
   using: "composite"
   steps:
-  - uses: actions/setup-node@v3
-    with:
-      node-version: 18
-  - uses: actions/checkout@v3
-    with:
-      repository: emulation-as-a-service/eaas-installer
-      ref: github-actions
-      path: ./eaas-installer
   - name: Setup Test Server
     run: |
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
-      sudo -E eaas-installer/scripts/install-test-server.py
+      sudo -E "$GITHUB_ACTION_PATH/eaas-installer/scripts/install-test-server.py"
     shell: bash
-  - name: Confirm Server is Ready
-    run: echo "Server is Ready!"
-    shell: bash
-
-
+    env:
+      show_summary: true

@@ -84,6 +84,7 @@ def update_git():
     if update:
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
 
+
 def handle_artifacts(artifact_url_path, artifact_type):
     if artifact_url_path:
         print(f"{artifact_type} was provided:")
@@ -97,7 +98,8 @@ def handle_artifacts(artifact_url_path, artifact_type):
         config[artifact_type] = artifact_url_path
 
     else:
-        print("No eaas-server.ear was provided. Defaulting to latest main build.")
+        print(f"No {artifact_type} was provided. Defaulting to latest HEAD build.")
+
 
 update_git()
 
