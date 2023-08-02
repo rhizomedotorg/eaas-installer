@@ -5,10 +5,10 @@ runs:
   using: "composite"
   steps:
   - name: Setup Test Server
+    shell: bash
     run: |
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
-      sudo -E "$GITHUB_ACTION_PATH/eaas-installer/scripts/install-test-server.py"
-    shell: bash
+      sudo -E "$GITHUB_ACTION_PATH/scripts/install-test-server.py"
     env:
       show_summary: true
