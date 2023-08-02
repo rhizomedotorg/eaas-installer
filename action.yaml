@@ -13,7 +13,7 @@ runs:
         path: ./eaas-installer
       env:
         # The `env` indirection is needed because directly using `repository: ${{ github.action_repository }}`
-        # in the above step would evaluate to `repository: actions/checkout@v3`.
+        # in the above step would evaluate to `repository: actions/checkout`.
         action_repository: ${{ github.action_repository }}
         action_ref: ${{ github.action_ref }}
     - name: Setup Test Server
