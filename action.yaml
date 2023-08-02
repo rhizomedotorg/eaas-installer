@@ -4,18 +4,23 @@ description: "Sets up a local EaaS instance (for testing)"
 runs:
   using: "composite"
   steps:
-  # GitHub Actions deletes the action's .git directory (and does not clone submodules).
-  # Thus, "$GITHUB_ACTION_PATH" cannot be used as `scripts/prepare.sh` wants to update Git submodules.
-  - uses: actions/checkout@v3
-    with:
-      repository: ${{ github.action_repository }}
-      ref: ${{ github.action_ref }}
-      path: ./eaas-installer
-  - name: Setup Test Server
-    shell: bash
-    run: |
-      # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
-      sudo apt remove -y moby-containerd moby-runc
-      sudo -E -- eaas-installer/scripts/install-test-server.py
-    env:
-      show_summary: true
+    - uses: actions/checkout@v3
+      # GitHub Actions deletes the action's .git directory (and does not clone submodules).
+      # Thus, "$GITHUB_ACTION_PATH" cannot be used as `scripts/prepare.sh` wants to update Git submodules.
+      with:
+        repository: ${{ env.action_repository }}
+        ref: ${{ env.action_ref }}
+        path: ./eaas-installer
+      env:
+        # The `env` indirection is needed because directly using `repository: ${{ github.action_repository }}`
+        # in the above step would evaluate to `repository: actions/checkout@v3`.
+        action_repository: ${{ github.action_repository }}
+        action_ref: ${{ github.action_ref }}
+    - name: Setup Test Server
+      shell: bash
+      run: |
+        # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
+        sudo apt remove -y moby-containerd moby-runc
+        sudo -E -- eaas-installer/scripts/install-test-server.py
+      env:
+        show_summary: true
