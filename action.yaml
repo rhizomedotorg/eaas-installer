@@ -9,6 +9,6 @@ runs:
     run: |
       # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
       sudo apt remove -y moby-containerd moby-runc
-      sudo -E "$GITHUB_ACTION_PATH/scripts/install-test-server.py"
+      sudo -E -- "$GITHUB_ACTION_PATH/scripts/install-test-server.py"
     env:
       show_summary: true
