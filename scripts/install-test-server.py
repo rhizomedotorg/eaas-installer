@@ -3,7 +3,9 @@
 import functools
 import glob
 import os
+import pathlib
 import subprocess
+from urllib.parse import urlparse
 
 import yaml
 
@@ -30,6 +32,7 @@ def yaml_save(path, obj):
 
 print = functools.partial(print, flush=True)
 
+wd = os.getcwd()
 os.chdir(f"{os.path.dirname(os.path.realpath(__file__))}/..")
 
 dry_run = bool(os.environ.get("dry_run"))
@@ -46,6 +49,11 @@ show_summary = os.environ.get("show_summary")
 
 if import_test_environments or show_summary:
     wait_for_eaas_server = "1"
+
+eaas_server_ear_url = os.environ.get("eaas_server_url")
+ui_artifact_url = os.environ.get("eaas_ui_url")
+
+print("All env variables in python:", os.environ)
 
 # HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
 cmd("systemctl", "disable", "--now", "rsyslog", check=False)
@@ -75,6 +83,22 @@ def update_git():
 
     if update:
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
+
+
+def handle_artifacts(artifact_url_path, artifact_type):
+    if artifact_url_path:
+        print(f"{artifact_type} was provided:")
+        if not urlparse(artifact_url_path).scheme:
+            artifact_url_path = pathlib.Path(wd, artifact_url_path).resolve().as_uri()
+            print(f"--- {artifact_type} was provided as a path, not as URL")
+        else:
+            print(f"--- {artifact_type} was provided as URL.")
+
+        print(f"Using {artifact_type}:", artifact_url_path)
+        config[artifact_type] = artifact_url_path
+
+    else:
+        print(f"No {artifact_type} was provided. Defaulting to latest HEAD build.")
 
 
 update_git()
@@ -156,6 +180,12 @@ if acmesh:
         domain,
         shell=True,
     )
+
+handle_artifacts(eaas_server_ear_url, "eaas_server_ear_url")
+handle_artifacts(ui_artifact_url, "ui_artifact_url")
+
+print("Hosts:", hosts)
+print("Config:", config)
 
 yaml_save("artifacts/config/hosts.yaml", hosts)
 yaml_save("artifacts/config/eaasi.yaml", config)
