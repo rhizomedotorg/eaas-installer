@@ -157,7 +157,7 @@ parser.add_argument(
 parser.add_argument(
     "-d",
     "--domain",
-    help="domain under which to create a new hostname for the VM (the VM's hostname will be $uuid.$domain)",
+    help='domain under which to create a new hostname for the VM (the VM\'s hostname will be $uuid.$domain). There needs to be a file `dns_$domainOrSuffix/token` (e.g., for "test.example.com", the file can be either `dns_test.example.com/token` or `dns_example.com/token`) in the working directory as described in <https://eaas.dev/external-dns-util/-/wikis#configuration>.',
 )
 parser.add_argument(
     "-p",
