@@ -9,7 +9,7 @@ runs:
       # Thus, "$GITHUB_ACTION_PATH" cannot be used as `scripts/prepare.sh` wants to update Git submodules.
       with:
         repository: ${{ env.action_repository }}
-        ref: ${{ env.action_ref }}
+        ref: ${{ !contains(fromJSON('["HEAD", "@"]'), env.action_ref) && env.action_ref || '' }}
         path: ./eaas-installer
       env:
         # The `env` indirection is needed because directly using `repository: ${{ github.action_repository }}`
