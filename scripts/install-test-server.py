@@ -56,7 +56,10 @@ ui_artifact_url = os.environ.get("eaas_ui_url")
 print("All env variables in python:", os.environ)
 
 # HACK: disable rsyslog, which regularly fills /var/log/messages with several gigabytes
-cmd("systemctl", "disable", "--now", "rsyslog", check=False)
+try:
+    cmd("systemctl", "disable", "--now", "rsyslog")
+except:
+    pass
 
 cmd("./scripts/install-dependencies.sh")
 cmd("./scripts/prepare.sh", "--local-mode")
