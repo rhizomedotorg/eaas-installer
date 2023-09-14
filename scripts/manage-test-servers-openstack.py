@@ -32,7 +32,13 @@ def create():
     flavor = conn.compute.find_flavor(args.flavor)
     network = conn.network.find_network(args.network)
 
-    set_env = shlex.join(["export", *map("=".join, parse_env(args.env).items())])
+    env = {
+        "base_domain": args.domain,
+        "hostname": args.hostname,
+        **parse_env(args.env),
+    }
+    env = {k: v for (k, v) in env.items() if v is not None}
+    set_env = shlex.join(["export", *map("=".join, env.items())])
 
     ssh_keys = pathlib.Path(args.ssh_key_file).read_text() if args.ssh_key_file else ""
 
@@ -42,7 +48,9 @@ def create():
 #!/bin/sh
 {set_env}
 
-export domain="$(cat /var/lib/cloud/data/instance-id)."{quote(args.domain)}
+export hostname domain
+: "${{hostname:="$(cat /var/lib/cloud/data/instance-id)"}}"
+: "${{domain:="$hostname.$base_domain"}}"
 hostnamectl set-hostname -- "${{domain%%-*}}"
 hostnamectl set-hostname --pretty -- "https://$domain "{quote(name)}
 
@@ -55,6 +63,9 @@ git clone {
     } --recursive https://gitlab.com/emulation-as-a-service/eaas-installer
 eaas-installer/scripts/install-test-server.py
 """.lstrip()
+
+    hostname = f"{args.hostname}.{args.domain}" if args.hostname else args.domain
+    name += f" {hostname}"
 
     server = nonone(
         conn.compute.create_server,
@@ -84,7 +95,8 @@ eaas-installer/scripts/install-test-server.py
 
     server = conn.compute.wait_for_server(server)
 
-    hostname = f"{server.id}.{args.domain}"
+    if not args.hostname:
+        hostname = f"{server.id}.{args.domain}"
     ip = next(filter(lambda v: v.version == 4, conn.compute.server_ips(server))).address
 
     if not args.no_dns:
@@ -104,6 +116,13 @@ eaas-installer/scripts/install-test-server.py
                 break
             hostname_parts.pop(0)
         env = parse_env(token_path.read_text().rstrip().split("\n"))
+
+        # Domain name might (or might not) have already existed before
+        subprocess.run(
+            ["./external-dns", "del", hostname, "A"],
+            env={**os.environ, **env},
+            check=False,
+        )
 
         subprocess.run(
             ["./external-dns", "add", hostname, "A", ip],
@@ -202,6 +221,10 @@ subparser.add_argument(
 subparser.add_argument("--ssh-key-pair", help="OpenStack SSH key pair name")
 subparser.add_argument(
     "-s", "--ssh-key-file", help="path to local file with SSH keys to inject into VM"
+)
+subparser.add_argument(
+    "--hostname",
+    help="hostname (without domain name) that will be used for the VM instead of $uuid",
 )
 subparser.add_argument(
     "--no-dns",
