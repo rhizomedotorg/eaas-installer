@@ -1,3 +1,5 @@
+[![Installation test](https://github.com/emulation-as-a-service/eaas-installer/actions/workflows/test.yml/badge.svg)](https://github.com/emulation-as-a-service/eaas-installer/actions/workflows/test.yml)
+
 # EaaS Local-Mode Installation
 
 This installer is able to deploy EaaS on a local computer (localhost) for testing / experiments.  This documentation is based on the EaaS-CI test runner (https://gitlab.com/emulation-as-a-service/experiments/eaas-ci-test).  
