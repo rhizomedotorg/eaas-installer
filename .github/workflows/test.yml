@@ -1,0 +1,18 @@
+name: Installation test
+
+on:
+  push:
+  workflow_dispatch:
+  schedule:
+    - cron: 00 00 * * *
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run installer action
+        uses: ./
+        env:
+          import_test_environments: true
+    timeout-minutes: 45
