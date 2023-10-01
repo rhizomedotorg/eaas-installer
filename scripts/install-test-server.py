@@ -52,6 +52,8 @@ if import_test_environments or show_summary:
 
 eaas_server_ear_url = os.environ.get("eaas_server_url")
 ui_artifact_url = os.environ.get("eaas_ui_url")
+eaas_version = os.environ.get("eaas_version")
+demo_ui_version = os.environ.get("demo_ui_version")
 
 print("All env variables in python:", os.environ)
 
@@ -186,6 +188,11 @@ if acmesh:
 
 handle_artifacts(eaas_server_ear_url, "eaas_server_ear_url")
 handle_artifacts(ui_artifact_url, "ui_artifact_url")
+
+if eaas_version:
+    config["eaas"]["version"] = eaas_version
+if demo_ui_version:
+    config["demo_ui"]["version"] = demo_ui_version
 
 print("Hosts:", hosts)
 print("Config:", config)
