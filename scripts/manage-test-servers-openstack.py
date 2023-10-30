@@ -25,7 +25,7 @@ def parse_env(env_strings):
 def create():
     image = next(
         filter(
-            lambda v: re.search(r"(?i)(?<!baremetal - )ubuntu 20.04", v.name),
+            lambda v: re.search(r"(?i)(?<!baremetal - )ubuntu 22.04", v.name),
             conn.list_images(),
         )
     )
