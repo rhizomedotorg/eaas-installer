@@ -20,7 +20,7 @@ runs:
       shell: bash
       run: |
         # HACK: scripts/install-dependencies.sh conflicts with packages preinstalled in GitHub Actions image
-        sudo apt remove -y moby-containerd moby-runc
+        sudo apt remove -y moby-containerd moby-runc containerd.io
         sudo -E -- eaas-installer/scripts/install-test-server.py
       env:
         show_summary: true
