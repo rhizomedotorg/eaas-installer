@@ -224,6 +224,13 @@ if wait_for_eaas_server:
         shell=True,
     )
 
+if setup_keycloak:
+    import eaas_orgctl
+
+    keycloak = eaas_orgctl.Keycloak(url, user, password)
+    keycloak_user = keycloak.fetch_user(user)
+    keycloak.assign_client_role(keycloak_user["id"], "eaas-admin")
+
 if import_test_environments:
     cmd("git", "clone", "--recurse-submodules", "https://eaas.dev/eaas-client")
     cmd("eaas-client/contrib/cli/install-deno")

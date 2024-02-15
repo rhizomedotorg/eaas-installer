@@ -4,3 +4,6 @@
 [submodule "eaasi-ui-ansible"]
 	path = eaasi-ui/ansible
 	url = https://gitlab.com/eaasi/eaasi-ui-ansible.git
+[submodule "scripts/eaas-orgctl"]
+	path = scripts/eaas-orgctl
+	url = https://gitlab.com/eaasi/eaas-orgctl
