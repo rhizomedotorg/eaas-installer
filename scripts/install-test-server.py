@@ -5,7 +5,7 @@ import glob
 import os
 import pathlib
 import subprocess
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urlunparse
 
 import yaml
 
@@ -227,7 +227,11 @@ if wait_for_eaas_server:
 if setup_keycloak:
     import eaas_orgctl
 
-    keycloak = eaas_orgctl.Keycloak(url, user, password)
+    url_parsed = urlparse(url)
+    keycloak_url = urlunparse(
+        url_parsed._replace(netloc=url_parsed.netloc.split("@")[-1])
+    )
+    keycloak = eaas_orgctl.Keycloak(keycloak_url, user, password)
     keycloak_user = keycloak.fetch_user(user)
     keycloak.assign_client_role(keycloak_user["id"], "eaas-admin")
 
