@@ -10,5 +10,5 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 DEBIAN_FRONTEND=noninteractive apt-get install -y python-is-python3 \
   || update-alternatives --install /usr/bin/python python /usr/bin/python3 100
 
-pip3 install docker-compose ansible
+pip3 install docker-compose "docker<7" ansible
 pip3 install "urllib3<2"
