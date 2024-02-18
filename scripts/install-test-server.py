@@ -30,6 +30,16 @@ def yaml_save(path, obj):
             file.write(string)
 
 
+def load_source(name, pathname):
+    from importlib.machinery import SourceFileLoader
+    from importlib.util import module_from_spec, spec_from_loader
+
+    loader = SourceFileLoader(name, pathname)
+    module = module_from_spec(spec_from_loader(name, loader))
+    loader.exec_module(module)
+    return module
+
+
 print = functools.partial(print, flush=True)
 
 wd = os.getcwd()
@@ -225,7 +235,7 @@ if wait_for_eaas_server:
     )
 
 if setup_keycloak:
-    import eaas_orgctl
+    eaas_orgctl = load_source("eaas_orgctl", "scripts/eaas-orgctl/eaas-orgctl")
 
     url_parsed = urlparse(url)
     keycloak_url = urlunparse(
