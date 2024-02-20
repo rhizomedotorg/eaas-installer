@@ -40,6 +40,15 @@ def load_source(name, pathname):
     return module
 
 
+def retry(fn, tries):
+    for i in range(tries):
+        try:
+            return fn()
+        except:
+            if i == tries - 1:
+                raise
+
+
 print = functools.partial(print, flush=True)
 
 wd = os.getcwd()
@@ -172,16 +181,21 @@ if acmesh:
     # Use webmaster@$domain as generic email address as it is
     # used by both https://www.rfc-editor.org/rfc/rfc2142 and
     # https://github.com/cabforum/servercert/blob/main/docs/BR.md#32244-constructed-email-to-domain-contact
-    cmd(
-        os.path.expanduser("~/.acme.sh/acme.sh"),
-        "--standalone",
-        "--issue",
-        "--domain",
-        domain,
-        "--email",
-        f"webmaster@{domain}",
-        "--server",
-        acmesh,
+    #
+    # Retry if acme.sh fails as some ACME providers are not very reliable.
+    retry(
+        lambda: cmd(
+            os.path.expanduser("~/.acme.sh/acme.sh"),
+            "--standalone",
+            "--issue",
+            "--domain",
+            domain,
+            "--email",
+            f"webmaster@{domain}",
+            "--server",
+            acmesh,
+        ),
+        5,
     )
 
     cmd("mkdir", "-p", "artifacts/ssl")
