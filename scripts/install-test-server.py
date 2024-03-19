@@ -4,6 +4,7 @@ import functools
 import glob
 import os
 import pathlib
+import shlex
 import subprocess
 from urllib.parse import urlparse, urlunparse
 
@@ -11,7 +12,7 @@ import yaml
 
 
 def cmd(*args, **kwds):
-    print("would run" if dry_run else "running", args, kwds, "...")
+    print("would run" if dry_run else "running", f"`{shlex.join(args)}`", kwds, "...")
     if dry_run:
         return subprocess.run("true")
     return subprocess.run(args, **{"check": True, **kwds})
