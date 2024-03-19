@@ -91,7 +91,7 @@ def update_git():
 
     if eaas_ansible_repo:
         update = True
-        cmd("git", "submodule", "set-url", "--", "eaas/ansible", eaas_ansible_repo)
+        cmd("git", "submodule", "set-url", "--", "eaas-ansible", eaas_ansible_repo)
 
     if eaas_ansible_branch:
         update = True
@@ -102,7 +102,7 @@ def update_git():
             "--branch",
             eaas_ansible_branch,
             "--",
-            "eaas/ansible",
+            "eaas-ansible",
         )
 
     if update:
