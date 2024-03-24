@@ -60,6 +60,7 @@ setup_keycloak = bool(os.environ.get("setup_keycloak"))
 eaas_ansible_repo = os.environ.get("eaas_ansible_repo")
 eaas_ansible_branch = os.environ.get("eaas_ansible_branch")
 docker_image_tag = os.environ.get("docker_image_tag")
+eaasi_ui_version = os.environ.get("eaasi_ui_version")
 https = os.environ.get("https")
 acmesh = os.environ.get("acmesh")
 domain = os.environ.get("domain")
@@ -222,6 +223,17 @@ if eaas_version:
     config["eaas"]["version"] = eaas_version
 if demo_ui_version:
     config["demo_ui"]["version"] = demo_ui_version
+
+if eaasi_ui_version:
+    config.setdefault("eaasi_ui", {}).version = eaasi_ui_version
+    # HACK: see https://gitlab.com/eaasi/eaasi-installer/-/blob/1a3a7a9de722bafc42e75079a7aa2c2357c95dc4/config/eaasi.yaml.template#L39-45
+    config["eaas"] |= {
+        "enable_backend_auth": True,
+        "enable_user_auth": True,
+        "single_user_mode": False,
+        "user_archive_enabled": False,
+        "auth_audience": "",
+    }
 
 print("Hosts:", hosts)
 print("Config:", config)
