@@ -225,7 +225,7 @@ if demo_ui_version:
     config["demo_ui"]["version"] = demo_ui_version
 
 if eaasi_ui_version:
-    config.setdefault("eaasi_ui", {}).version = eaasi_ui_version
+    config.setdefault("eaasi_ui", {})["version"] = eaasi_ui_version
     # HACK: see https://gitlab.com/eaasi/eaasi-installer/-/blob/1a3a7a9de722bafc42e75079a7aa2c2357c95dc4/config/eaasi.yaml.template#L39-45
     config["eaas"] |= {
         "enable_backend_auth": True,
