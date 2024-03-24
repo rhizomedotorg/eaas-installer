@@ -276,6 +276,13 @@ if setup_keycloak:
     keycloak_user = keycloak.fetch_user(user)
     keycloak.assign_client_role(keycloak_user["id"], "eaas-admin")
 
+    groupadmin = eaas_orgctl.User(
+        "groupadmin", "groupadmin@eaas.test", "group", "admin"
+    )
+    groupadmin.password = "groupadmin"
+    groupadmin.randomize_password = lambda: None
+    keycloak.create_organization(eaas_orgctl.Organization("group", "group", groupadmin))
+
 if import_test_environments:
     cmd("git", "clone", "--recurse-submodules", "https://eaas.dev/eaas-client")
     cmd("eaas-client/contrib/cli/install-deno")
