@@ -24,7 +24,8 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 
 Finally, install python dependencies via Python PIP:
    ```bash
-   sudo pip3 install docker-compose ansible
+   sudo pip3 install docker-compose "docker<7" ansible
+   sudo pip3 install "urllib3<2"
    ```
    
 ## Base Installation and Setup
