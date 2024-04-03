@@ -4,7 +4,7 @@ This installer is able to deploy EaaS on a local computer (localhost) for testin
 
 - This will work on Linux and Mac OSX. Other OS might work, but untested.
 - By default EaaS will be installed as a systemd service and requires Docker to be installed as a systemd service as well.
-- The EaaS demo-ui interface will be accessible at `http://localhost:8080`.
+- The EaaS demo-ui interface will be accessible at `http://localhost:80`.
 
 ## Preconditions
 
@@ -36,7 +36,7 @@ The installation process is supposed to run only once. To update the setup with 
 
 1. Clone this repository e.g.
    ```bash
-   git clone https://gitlab.com/eaasi/eaasi-installer.git eaas-local-installer
+   git clone https://gitlab.com/emulation-as-a-service/eaas-installer.git eaas-local-installer
    cd eaas-local-installer
    ```
 
@@ -74,19 +74,47 @@ The installation process is supposed to run only once. To update the setup with 
 
     docker:
       image: "eaas/eaas-appserver"
-      port: 8080	# Don't change the port.
+      port: 80
 
-    ui:
-      git_branch: "master"
-      enable_network_sessions: true
-      enable_containers: true
-      enable_webrtc: true
-      standalone: true
-    
+      # to enable SSL with custom certificate,
+      # uncomment the following lines...
+      #ssl:
+      #  enabled: true
+      #  certificate: "./artifacts/ssl/certificate.crt"
+      #  private_key: "./artifacts/ssl/private.key"
+
+    minio:
+      enabled: true
+
     eaas:
-      git_branch: "master"
+      version: "master"
       enable_oaipmh_provider: true
       db_upgrade: true
+      enable_webrtc: true
+      standalone: true
+
+      # currently required options,
+      # just leave them as-is
+      # enable_backend_auth: true
+      # enable_user_auth: true
+      # single_user_mode: false
+      # user_archive_enabled: false
+      # auth_audience: ""
+
+    demo_ui:
+      version: "master"
+      enable_admin_ui: true
+      enable_network_sessions: true
+      enable_containers: true
+      landing_page: true
+
+    resolver:
+      cache:
+        enabled: true
+        capacity: 10g
+
+    eaas_project_id: "emulation-as-a-service%2feaas-server"
+    ui_project_id: "emulation-as-a-service%2fdemo-ui"
 
     ```
 6. Run `./scripts/deploy.sh` — after a few minutes, you should have your very own EaaS node running on your computer.
@@ -95,7 +123,7 @@ The installation process is supposed to run only once. To update the setup with 
 
 ### Updating
 
-Do not remove the `eaasi-installer` repository from your computer, because you will be able to update to new distribution versions of EaaS: 
+Do not remove the `eaas-installer` repository from your computer, because you will be able to update to new distribution versions of EaaS: 
 
 ```sh
 ./scripts/update.sh ui ear docker-image
@@ -138,14 +166,14 @@ sudo systemctl stop eaas-local
 
 ### Manual managing the EaaS server
 
-Inside the `eaas-home` run `sudo docker-compose up` to start the service. 
+On a system without systemd (e.g. MacOS), inside the `eaas-home` run `sudo docker-compose up` to start the service. 
 
 **Note:** If you have a older version installed make sure to run `sudo docker-compose pull` to pull the latest EaaS containers.  
 
 
 ## First Steps
 
-Access the main page at: http://localhost:8080
+Access the main page at: http://localhost:80
 
 ### Install emulators
 
