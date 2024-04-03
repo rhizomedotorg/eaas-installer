@@ -1,0 +1,33 @@
+---
+host:
+  build_dir: "/eaas-build"
+  eaas_home: "/eaas-home"
+  eaas_service_name: "eaas-local"
+
+docker:
+  image: "eaas/eaas-appserver"
+  port: 8080
+
+  # to enable SSL with custom certificate,
+  # uncomment the following lines...
+  #port: 443
+  #ssl:
+  #  enabled: true
+  #  certificate: "./artifacts/ssl/server.crt"
+  #  private_key: "./artifacts/ssl/server.key"
+
+demo_ui:
+  version: "master"
+  enable_network_sessions: true
+  enable_containers: true
+  landing_page: true
+  
+eaas:
+  version: "master"
+  enable_oaipmh_provider: true
+  db_upgrade: true
+  enable_webrtc: true
+  standalone: true
+
+eaas_project_id: "10009002" ## project id public 'emulation-as-a-service'
+ui_project_id: "10009004" ## project id public 'emulation-as-a-service
