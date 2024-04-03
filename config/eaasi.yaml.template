@@ -1,12 +1,10 @@
 ---
 host:
-  build_dir: "/eaas-build"
-  eaas_home: "/eaas-home"
-  eaas_service_name: "eaas-local"
+  eaas_home: "/eaasi"
 
 docker:
-  image: "eaas/eaas-appserver"
-  port: 80
+  image: "eaas/eaas-appserver:v2021.10-eaasi"
+  network_name: "eaasi"
 
   # to enable SSL with custom certificate,
   # uncomment the following lines...
@@ -15,35 +13,49 @@ docker:
   #  certificate: "./artifacts/ssl/certificate.crt"
   #  private_key: "./artifacts/ssl/private.key"
 
+keycloak:
+  version: "15.0.2"
+  enabled: true
+  admin_user: "superadmin"
+  admin_password: "<SUPERADMIN-PASSWORD>"
+  theme:
+    version: "v2021.10"
+    name: "eaasi-v1"
+
 minio:
+  version: "RELEASE.2021-11-03T03-36-36Z"
   enabled: true
 
 eaas:
-  version: "master"
-  enable_oaipmh_provider: true
-  db_upgrade: true
-  enable_webrtc: true
-  standalone: true
+  version: "v2021.10-eaasi"
+  migrations:
+  - name: import-legacy-image-index
+  - name: import-legacy-emulator-index
+  - name: import-legacy-image-archive-v1
+  - name: import-local-emil-environments
+  - name: import-legacy-emil-database-v1
+  - name: create-absent-emil-environments
 
   # currently required options,
   # just leave them as-is
-  # enable_backend_auth: true
-  # enable_user_auth: true
-  # single_user_mode: false
-  # user_archive_enabled: false
-  # auth_audience: ""
+  enable_backend_auth: true
+  enable_user_auth: true
+  single_user_mode: false
+  user_archive_enabled: false
+  auth_audience: ""
 
 demo_ui:
-  version: "master"
+  version: "v2021.10-eaasi"
   enable_admin_ui: true
-  enable_network_sessions: true
-  enable_containers: true
-  landing_page: true
 
-resolver:
-  cache:
-    enabled: true
-    capacity: 10g
+eaasi_ui:
+  version: "v2021.10"
+  edition: "standalone"
 
-eaas_project_id: "emulation-as-a-service%2feaas-server"
-ui_project_id: "emulation-as-a-service%2fdemo-ui"
+  # to update older installations,
+  # uncomment the following lines...
+  #migrations:
+  #- name: "import-legacy-users"
+  #  args:
+  #    tenant_id: "eaasi"
+  #    orgname: "EaaSI"

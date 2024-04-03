@@ -130,10 +130,10 @@ def handle_artifacts(artifact_url_path, artifact_type):
 update_git()
 
 hosts = yaml_load("config/localhost.yaml.template")
-config = yaml_load("config/eaasi.yaml.template")
+config = yaml_load("config/local-mode.yaml.template")
 
 cmd("ln", "-sr", "config/localhost.yaml.template", "artifacts/config/hosts.yaml")
-cmd("ln", "-sr", "config/eaasi.yaml.template", "artifacts/config/eaasi.yaml")
+cmd("ln", "-sr", "config/local-mode.yaml.template", "artifacts/config/eaasi.yaml")
 
 hosts["all"]["hosts"]["eaas-gateway"]["ansible_user"] = "root"
 if https:

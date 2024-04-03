@@ -6,22 +6,18 @@ host:
 
 docker:
   image: "eaas/eaas-appserver"
-  port: 8080
+  port: 80
 
   # to enable SSL with custom certificate,
   # uncomment the following lines...
-  #port: 443
   #ssl:
   #  enabled: true
-  #  certificate: "./artifacts/ssl/server.crt"
-  #  private_key: "./artifacts/ssl/server.key"
+  #  certificate: "./artifacts/ssl/certificate.crt"
+  #  private_key: "./artifacts/ssl/private.key"
 
-demo_ui:
-  version: "master"
-  enable_network_sessions: true
-  enable_containers: true
-  landing_page: true
-  
+minio:
+  enabled: true
+
 eaas:
   version: "master"
   enable_oaipmh_provider: true
@@ -29,5 +25,25 @@ eaas:
   enable_webrtc: true
   standalone: true
 
-eaas_project_id: "10009002" ## project id public 'emulation-as-a-service'
-ui_project_id: "10009004" ## project id public 'emulation-as-a-service
+  # currently required options,
+  # just leave them as-is
+  # enable_backend_auth: true
+  # enable_user_auth: true
+  # single_user_mode: false
+  # user_archive_enabled: false
+  # auth_audience: ""
+
+demo_ui:
+  version: "master"
+  enable_admin_ui: true
+  enable_network_sessions: true
+  enable_containers: true
+  landing_page: true
+
+resolver:
+  cache:
+    enabled: true
+    capacity: 10g
+
+eaas_project_id: "emulation-as-a-service%2feaas-server"
+ui_project_id: "emulation-as-a-service%2fdemo-ui"
