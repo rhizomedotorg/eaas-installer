@@ -19,6 +19,8 @@ minio:
   enabled: true
 
 eaas:
+  error_report_include_config: true
+
   version: "master"
   enable_oaipmh_provider: true
   db_upgrade: true
