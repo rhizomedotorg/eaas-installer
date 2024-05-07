@@ -277,7 +277,7 @@ if setup_keycloak:
     keycloak.assign_client_role(keycloak_user["id"], "eaas-admin")
 
     groupadmin = eaas_orgctl.User(
-        "groupadmin", "groupadmin@eaas.test", "group", "admin"
+        "groupadmin", "groupadmin@eaas.test", "group", "admin", "eaas-admin"
     )
     groupadmin.password = "groupadmin"
     groupadmin.randomize_password = lambda: None
