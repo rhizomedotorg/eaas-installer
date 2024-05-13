@@ -24,7 +24,7 @@ eaas:
   version: "master"
   enable_oaipmh_provider: true
   db_upgrade: true
-  enable_webrtc: true
+  # enable_webrtc: true
   standalone: true
 
   # currently required options,
