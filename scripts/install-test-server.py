@@ -266,6 +266,8 @@ if wait_for_eaas_server:
     )
 
 if setup_keycloak:
+    # HACK: make temporary password permanent
+    cmd("sed", "-i", "/'temporary': True/d", "scripts/eaas-orgctl/eaas-orgctl")
     eaas_orgctl = load_source("eaas_orgctl", "scripts/eaas-orgctl/eaas-orgctl")
 
     url_parsed = urlparse(url)
@@ -280,6 +282,7 @@ if setup_keycloak:
         "groupadmin", "groupadmin@eaas.test", "group", "admin", "eaas-admin"
     )
     groupadmin.password = "groupadmin"
+    # HACK: allow to specify constant password
     groupadmin.randomize_password = lambda: None
     keycloak.create_organization(eaas_orgctl.Organization("group", "group", groupadmin))
 
