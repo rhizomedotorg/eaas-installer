@@ -286,7 +286,7 @@ if setup_keycloak:
     keycloak.create_organization(eaas_orgctl.Organization("group", "group", groupadmin))
 
     url_parsed = url_parsed._replace(
-        netloc=f"{quote(groupadmin.username, safe='')}:{quote(groupadmin.password,safe='')}@:{url_parsed.netloc}"
+        netloc=f"{quote(groupadmin.username, safe='')}:{quote(groupadmin.password, safe='')}@{url_parsed.netloc}"
     )
     url = urlunparse(url_parsed)
 
