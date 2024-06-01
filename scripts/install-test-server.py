@@ -6,7 +6,7 @@ import os
 import pathlib
 import shlex
 import subprocess
-from urllib.parse import urlparse, urlunparse
+from urllib.parse import urlparse, urlunparse, quote
 
 import yaml
 
@@ -162,8 +162,8 @@ if setup_keycloak:
     config["eaas"]["enable_devmode"] = True
     config["keycloak"] = {
         "enabled": True,
-        "admin_user": "admin",
-        "admin_password": "admin",
+        "admin_user": "superadmin",
+        "admin_password": "superadmin",
     }
     if https:
         config["keycloak"]["frontend_url"] = f"https://{domain}/auth"
@@ -271,20 +271,24 @@ if setup_keycloak:
     eaas_orgctl = load_source("eaas_orgctl", "scripts/eaas-orgctl/eaas-orgctl")
 
     url_parsed = urlparse(url)
-    keycloak_url = urlunparse(
-        url_parsed._replace(netloc=url_parsed.netloc.split("@")[-1])
-    )
+    url_parsed = url_parsed._replace(netloc=url_parsed.netloc.split("@")[-1])
+    keycloak_url = urlunparse(url_parsed)
     keycloak = eaas_orgctl.Keycloak(keycloak_url, user, password)
     keycloak_user = keycloak.fetch_user(user)
     keycloak.assign_client_role(keycloak_user["id"], "eaas-admin")
 
     groupadmin = eaas_orgctl.User(
-        "groupadmin", "groupadmin@eaas.test", "group", "admin", "eaas-admin"
+        "admin", "groupadmin@eaas.test", "group", "admin", "eaas-admin"
     )
-    groupadmin.password = "groupadmin"
+    groupadmin.password = "admin"
     # HACK: allow to specify constant password
     groupadmin.randomize_password = lambda: None
     keycloak.create_organization(eaas_orgctl.Organization("group", "group", groupadmin))
+
+    url_parsed = url_parsed._replace(
+        netloc=f"{quote(groupadmin.username, safe='')}:{quote(groupadmin.password,safe='')}@:{url_parsed.netloc}"
+    )
+    url = urlunparse(url_parsed)
 
 if import_test_environments:
     cmd("git", "clone", "--recurse-submodules", "https://eaas.dev/eaas-client")
