@@ -70,7 +70,7 @@ The installation process is supposed to run only once. To update the setup with 
     host:
       build_dir: "/eaas-build" ## Set up target directories
       eaas_home: "/eaas-home"  ## on a drive with lots of space!
-      eaas_service_name: "eaas-local" ## on systemd capable systems (e.g. ubuntu) a service unit will be created
+      eaas_service_name: "eaas" ## on systemd capable systems (e.g. ubuntu) a service unit will be created
 
     docker:
       image: "eaas/eaas-appserver"
@@ -149,19 +149,19 @@ If you install EaaS on your laptop, you probably do not want it to start up each
 Disable the EaaS service so it won't automatically start:
 
 ```sh
-sudo systemctl disable eaas-local
+sudo systemctl disable eaas
 ```
 
 When the time has come, manually start it:
 
 ```sh
-sudo systemctl start eaas-local
+sudo systemctl start eaas
 ```
 
 To gracefully stop the server, run:
 
 ```sh
-sudo systemctl stop eaas-local
+sudo systemctl stop eaas
 ```
 
 ### Manual managing the EaaS server

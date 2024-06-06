@@ -2,7 +2,7 @@
 host:
   build_dir: "/eaas-build"
   eaas_home: "/eaas-home"
-  eaas_service_name: "eaas-local"
+  eaas_service_name: "eaas"
 
 docker:
   image: "eaas/eaas-appserver"
