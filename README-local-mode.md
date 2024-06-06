@@ -179,7 +179,7 @@ Access the main page at: http://localhost:80
 
 Go to **Settings** -> **Manage Emulators** -> **Import Emulator**
 
-To import Qemu: enter ```eaas/qemu-eaas```
+To import Qemu: enter ```registry.gitlab.com/emulation-as-a-service/emulators/qemu-eaas```
 
 To install other emulators: https://gitlab.com/emulation-as-a-service/emulators 
 
