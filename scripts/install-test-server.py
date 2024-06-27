@@ -108,6 +108,7 @@ def update_git():
         )
 
     if update:
+        cmd("git", "submodule", "sync", "eaas/ansible")
         cmd("git", "submodule", "update", "--remote", "eaas/ansible")
 
 
