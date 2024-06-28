@@ -249,10 +249,11 @@ cmd("chmod", "-R", "ugo=u", "/eaas-home")
 auth = ""
 if setup_keycloak:
     docker_compose = yaml_load(glob.glob("/eaas*/docker-compose.yaml")[0])
-    user = docker_compose["services"]["keycloak"]["environment"]["KEYCLOAK_USER"]
-    password = docker_compose["services"]["keycloak"]["environment"][
-        "KEYCLOAK_PASSWORD"
-    ]
+    environment = docker_compose["services"]["keycloak"]["environment"]
+    user = environment.get("KEYCLOAK_ADMIN") or environment["KEYCLOAK_USER"]
+    password = (
+        environment.get("KEYCLOAK_ADMIN_PASSWORD") or environment["KEYCLOAK_PASSWORD"]
+    )
     auth = f"{user}:{password}@"
 
 url = f"http://{auth}localhost:{config['docker']['port']}"
