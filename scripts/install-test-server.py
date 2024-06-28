@@ -171,6 +171,9 @@ if setup_keycloak:
     else:
         config["keycloak"]["frontend_url"] = f"http://localhost:8080/auth"
 
+    # HACK: newer Keycloak versions will currently not work
+    config["keycloak"]["version"] = "23.0"
+
 if acmesh:
     if acmesh in {"1", "true"}:
         acmesh = "buypass"
