@@ -171,10 +171,6 @@ if setup_keycloak:
     else:
         config["keycloak"]["frontend_url"] = f"http://localhost:8080/auth"
 
-    # HACK: work around deleted jboss/keycloak image, see https://gitlab.com/emulation-as-a-service/eaas/-/issues/41
-    config["keycloak"]["version"] = "16.1.1"
-    config.setdefault("workarounds", {})["docker_hub_ratelimits"] = True
-
 if acmesh:
     if acmesh in {"1", "true"}:
         acmesh = "buypass"
