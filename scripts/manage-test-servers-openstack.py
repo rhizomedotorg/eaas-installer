@@ -32,36 +32,27 @@ def create():
     flavor = conn.compute.find_flavor(args.flavor)
     network = conn.network.find_network(args.network)
 
+    ssh_keys = pathlib.Path(args.ssh_key_file).read_text() if args.ssh_key_file else ""
+
     env = {
         "base_domain": args.domain,
         "hostname": args.hostname,
+        "ssh_keys": ssh_keys,
+        "installer_branch": args.installer_branch,
         **parse_env(args.env),
     }
     env = {k: v for (k, v) in env.items() if v is not None}
-    set_env = shlex.join(["export", *map("=".join, env.items())])
-
-    ssh_keys = pathlib.Path(args.ssh_key_file).read_text() if args.ssh_key_file else ""
 
     name = f"{args.prefix}{datetime.datetime.utcnow().isoformat()}Z{''.join(f' {v}' for v in args.env)}"
+    env["name"] = name
+
+    set_env = shlex.join(["export", *map("=".join, env.items())])
 
     cloud_config = rf"""
 #!/bin/sh
 {set_env}
 
-export hostname domain
-: "${{hostname:="$(cat /var/lib/cloud/data/instance-id)"}}"
-: "${{domain:="$hostname.$base_domain"}}"
-hostnamectl set-hostname -- "${{domain%%-*}}"
-hostnamectl set-hostname --pretty -- "https://$domain "{quote(name)}
-
-printf "%s\n" {quote(ssh_keys)} >> /home/ubuntu/.ssh/authorized_keys
-curl -fL https://github.com/emulation-as-a-service/cloud-init-update/raw/main/user-data | sh
-apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git
-
-git clone {
-      f'--branch {quote(args.installer_branch)}' if args.installer_branch else ""
-    } --recursive https://gitlab.com/emulation-as-a-service/eaas-installer
-eaas-installer/scripts/install-test-server.py
+{pathlib.Path(__file__).parent.joinpath('install-test-server-user-data').read_text()}
 """.lstrip()
 
     hostname = f"{args.hostname}.{args.domain}" if args.hostname else args.domain

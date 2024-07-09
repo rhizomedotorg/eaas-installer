@@ -1,0 +1,14 @@
+#!/bin/sh
+
+export hostname domain
+: "${hostname:="$(cat /var/lib/cloud/data/instance-id)"}"
+: "${domain:="$hostname.$base_domain"}"
+hostnamectl set-hostname -- "${domain%%-*}"
+hostnamectl set-hostname --pretty -- "https://$domain $name"
+
+printf "%s\n" "$ssh_keys" >> /home/ubuntu/.ssh/authorized_keys
+curl -fL https://github.com/emulation-as-a-service/cloud-init-update/raw/main/user-data | sh
+apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y git
+
+git clone ${installer_branch:+--branch "$installer_branch"} --recursive https://gitlab.com/emulation-as-a-service/eaas-installer
+eaas-installer/scripts/install-test-server.py
