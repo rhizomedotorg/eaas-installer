@@ -40,6 +40,7 @@ demo_ui:
   enable_admin_ui: true
   enable_network_sessions: true
   enable_containers: true
+  enable_standalone: true
   landing_page: true
 
 resolver:
