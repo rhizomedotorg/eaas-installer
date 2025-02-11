@@ -19,7 +19,7 @@
       node_memory: "{{ ansible_memtotal_mb }}"
   pre_tasks:
   - name: check supported distribution
-    when: "ansible_distribution not in ['Ubuntu', 'CentOS', 'RedHat']"
+    when: "ansible_distribution not in ['Ubuntu', 'CentOS', 'RedHat', 'Debian']"
     set_fact: 
       unsupported_os: "true"
 

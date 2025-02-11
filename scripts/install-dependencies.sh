@@ -10,5 +10,7 @@ apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y \
 DEBIAN_FRONTEND=noninteractive apt-get install -y python-is-python3 \
   || update-alternatives --install /usr/bin/python python /usr/bin/python3 100
 
-pip3 install docker-compose "docker<7" ansible
-pip3 install "urllib3<2"
+# HACK: make compatible to Python 3.11+
+rm -f /usr/lib/python3.*/EXTERNALLY-MANAGED
+pip3 install --break-system-packages --no-build-isolation docker-compose "docker<7" ansible
+pip3 install --break-system-packages "urllib3<2"

@@ -179,7 +179,7 @@ if acmesh:
         acmesh = "buypass"
 
     os.environ["HOME"] = "/root"
-    cmd("curl https://get.acme.sh | sh", shell=True)
+    cmd("curl https://get.acme.sh | sh -s force", shell=True)
 
     # Buypass will issue a certificate valid for 180 days.
     # See: https://github.com/acmesh-official/acme.sh/wiki/Server
