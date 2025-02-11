@@ -137,7 +137,7 @@ cmd("ln", "-sr", "config/localhost.yaml.template", "artifacts/config/hosts.yaml"
 cmd("ln", "-sr", "config/local-mode.yaml.template", "artifacts/config/eaasi.yaml")
 
 hosts["all"]["hosts"]["eaas-gateway"]["ansible_user"] = "root"
-if https:
+if domain:
     hosts["all"]["hosts"]["eaas-gateway"]["eaas_hostname"] = domain
 
 config["host"]["eaas_service_name"] = "eaas"
@@ -169,7 +169,7 @@ if setup_keycloak:
     if https:
         config["keycloak"]["frontend_url"] = f"https://{domain}/auth"
     else:
-        config["keycloak"]["frontend_url"] = f"http://localhost:8080/auth"
+        config["keycloak"]["frontend_url"] = f"http://{domain or 'localhost'}/auth"
 
     # HACK: newer Keycloak versions will currently not work
     config["keycloak"]["version"] = "23.0"
