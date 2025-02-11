@@ -17,7 +17,12 @@ if [ "${NAME-}" = "Ubuntu" ] && [ "${VERSION_ID-}" = "24.04" ]; then
   exit
 fi
 
+break="--break-system-packages"
+if [ "${NAME-}" = "Ubuntu" ] && [ "${VERSION_ID-}" = "22.04" ]; then
+  break=""
+fi
+
 # HACK: make compatible to Python 3.11+
 rm -f /usr/lib/python3.*/EXTERNALLY-MANAGED
-pip3 install --break-system-packages --no-build-isolation docker-compose "docker<7" ansible
-pip3 install --break-system-packages "urllib3<2"
+pip3 install $break --no-build-isolation docker-compose "docker<7" ansible
+pip3 install $break "urllib3<2"
